@@ -13,15 +13,110 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// usuário está em um curso, logo as disciplina que ele é cadastrado deve pertencer somente a esse curso
 model Usuario {
-  id         Int      @id @default(autoincrement())
-  nome       String
-  email      String
-  senha      String
-  tipo       Int      @default(0)
-  foto       String   
-  RG         String
-  CPF        String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id          Int                   @id @default(autoincrement())
+  nome        String
+  email       String
+  senha       String
+  tipo        Int                   @default(0)
+  foto        String
+  RG          String
+  CPF         String
+  createdAt   DateTime              @default(now())
+  updatedAt   DateTime              @updatedAt
+  mentorias   Usuario_Mentoria[]
+  curso       Curso                 @relation(fields: [cursoId], references: [id])
+  cursoId     Int
+  disciplinas Usuario_Disciplinas[]
+}
+
+model Mentoria {
+  id           Int                @id @default(autoincrement())
+  nome         String
+  localizacao  String
+  data_inicio  DateTime
+  data_fim     DateTime
+  descricao    String
+  mentor       String
+  usuarios     Usuario_Mentoria[]
+  avaliacao    Avaliacao          @relation(fields: [avaliacaoId], references: [id])
+  avaliacaoId  Int
+  Disciplina   Disciplina         @relation(fields: [disciplinaId], references: [id])
+  disciplinaId Int
+}
+
+model Avaliacao {
+  id             Int      @id @default(autoincrement())
+  data_avaliacao DateTime @default(now())
+  nota_geral     Int
+  comentario     String
+  recomendaria   Boolean
+
+  // relation
+  mentorias Mentoria[]
+}
+
+model Disciplina {
+  id          Int      @id @default(autoincrement())
+  nome        String
+  data_inicio DateTime
+  data_fim    DateTime
+  descricao   String
+  curso       Curso    @relation(fields: [cursoId], references: [id])
+  cursoId     Int
+
+  // relation
+  mentorias Mentoria[]
+  usuarios  Usuario_Disciplinas[]
+}
+
+model Curso {
+  id          Int     @id @default(autoincrement())
+  nome        String
+  nivel       Int
+  tipo        Int
+  status      Boolean
+  localizacao String
+
+  //relation
+  usuarios      Usuario[]
+  departamentos Curso_Departamento[]
+  Disciplina    Disciplina[]
+}
+
+model Departamento {
+  id        Int                  @id @default(autoincrement())
+  nome      String
+  descricao String
+  telefone  String
+  cursos    Curso_Departamento[]
+}
+
+// RELATIONS (MANY TO MANY)
+model Usuario_Mentoria {
+  usuario    Usuario  @relation(fields: [usuarioId], references: [id])
+  usuarioId  Int
+  mentoria   Mentoria @relation(fields: [mentoriaId], references: [id])
+  mentoriaId Int
+
+  @@id([usuarioId, mentoriaId])
+}
+
+model Usuario_Disciplinas {
+  usuario      Usuario    @relation(fields: [usuarioId], references: [id])
+  usuarioId    Int
+  disciplina   Disciplina @relation(fields: [disciplinaId], references: [id])
+  disciplinaId Int
+
+  @@id([usuarioId, disciplinaId])
+}
+
+model Curso_Departamento {
+  curso          Curso        @relation(fields: [cursoId], references: [id])
+  cursoId        Int
+  departamento   Departamento @relation(fields: [departamentoId], references: [id])
+  departamentoId Int
+
+  @@id([cursoId, departamentoId])
 }
