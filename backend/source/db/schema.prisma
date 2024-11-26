@@ -38,7 +38,7 @@ model Mentoria {
   data_inicio  DateTime
   data_fim     DateTime
   descricao    String
-  mentor       String
+  mentor       Int
   usuarios     Usuario_Mentoria[]
   avaliacao    Avaliacao          @relation(fields: [avaliacaoId], references: [id])
   avaliacaoId  Int
