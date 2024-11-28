@@ -2,12 +2,16 @@ import express, { Express } from "express";
 import morgan from "morgan";
 import { Request, Response, NextFunction } from "express";
 import router from "./routes";
+import cors from "cors";
 
 const app: Express = express();
 const PORT: number = 3000;
 
 // logging
 app.use(morgan("dev"));
+
+// cors
+app.use(cors());
 
 // parse the request
 app.use(express.urlencoded({ extended: true }));
@@ -19,7 +23,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
     "Access-Control-Allow-Headers",
-    "origin, X-Requested-With, Content-Type, Accept, Authorization",
+    "origin, X-Requested-With, Content-Type, Accept, Authorization"
   );
   if (req.method === "OPTIONS") {
     res.header("Access-Control-Allow-Methods", "GET PATCH DELETE POST PUT");
