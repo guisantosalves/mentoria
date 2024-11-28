@@ -184,6 +184,15 @@ class User {
     const idFromParam = req.params.id;
 
     (async () => {
+      const isUserExist = await prisma.usuario.findFirst({
+        where: { id: Number(idFromParam) },
+      });
+
+      if (!isUserExist) {
+        res.status(400).json({ message: "user not found" });
+        return;
+      }
+
       const data = await prisma.usuario.delete({
         where: {
           id: Number(idFromParam),
