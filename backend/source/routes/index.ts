@@ -1,5 +1,9 @@
 import express from "express";
-import { DepController, UserController } from "../controllers";
+import {
+  AvaliacaoController,
+  DepController,
+  UserController,
+} from "../controllers";
 import { LoginController } from "../controllers";
 import { auth } from "../middleware/auth";
 
@@ -21,5 +25,16 @@ router.get("/departamento/:id", DepController.getDepById);
 router.post("/departamento", DepController.createDep);
 router.put("/departamento/:id", DepController.updateDep);
 router.delete("/departamento/:id", DepController.deleteDep);
+
+// avaliacao
+router.get("/avaliacao", AvaliacaoController.getAvaliacao);
+router.get("/avaliacao/:id", AvaliacaoController.getAvaliacaoById);
+router.get(
+  "/avaliacao/mentoria/:mentoriaId",
+  AvaliacaoController.getAvaliacaoByMentoria
+);
+router.post("/avaliacao", AvaliacaoController.createAvaliacao);
+router.put("/avaliacao/:id", AvaliacaoController.updateAvaliacao);
+router.delete("/avaliacao/:id", AvaliacaoController.deleteAvaliacao);
 
 export default router;

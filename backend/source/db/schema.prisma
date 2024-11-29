@@ -5,7 +5,8 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+  previewFeatures = ["relationJoins"]
+  provider        = "prisma-client-js"
 }
 
 datasource db {
@@ -40,10 +41,9 @@ model Mentoria {
   descricao    String
   mentor       Int
   usuarios     Usuario_Mentoria[]
-  avaliacao    Avaliacao          @relation(fields: [avaliacaoId], references: [id])
-  avaliacaoId  Int
   Disciplina   Disciplina         @relation(fields: [disciplinaId], references: [id])
   disciplinaId Int
+  avaliacoes   Avaliacao[]
 }
 
 model Avaliacao {
@@ -54,7 +54,8 @@ model Avaliacao {
   recomendaria   Boolean
 
   // relation
-  mentorias Mentoria[]
+  mentoria   Mentoria @relation(fields: [mentoriaId], references: [id])
+  mentoriaId Int
 }
 
 model Disciplina {

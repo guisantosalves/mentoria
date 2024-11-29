@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 
 const prisma = new PrismaClient();
 
-class User {
+export class User {
   getUser(req: Request, res: Response, next: NextFunction) {
     (async () => {
       // executing query
@@ -232,5 +232,3 @@ class User {
       });
   }
 }
-
-export default User;
