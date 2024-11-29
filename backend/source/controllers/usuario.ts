@@ -27,6 +27,7 @@ class User {
         await prisma.$disconnect();
       });
   }
+
   getUserById(req: Request, res: Response, next: NextFunction) {
     const idFromParam = req.params.id;
     (async () => {
@@ -123,6 +124,24 @@ class User {
       if (!isUserExist) {
         res.status(400).json({ message: "user not found" });
         return;
+      }
+
+      // deleting the relation to overwrite
+      if (dataToUpdate.disciplinas) {
+        await prisma.usuario_Disciplinas.deleteMany({
+          where: {
+            usuarioId: idFromParam ? Number(idFromParam) : dataToUpdate.id,
+          },
+        });
+      }
+
+      // deleting the relation to overwrite
+      if (dataToUpdate.mentorias) {
+        await prisma.usuario_Mentoria.deleteMany({
+          where: {
+            usuarioId: idFromParam ? Number(idFromParam) : dataToUpdate.id,
+          },
+        });
       }
 
       const data = await prisma.usuario.update({

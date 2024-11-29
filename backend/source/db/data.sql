@@ -177,3 +177,7 @@ VALUES
     (3, 3),
     (4, 2),
     (5, 5);
+
+
+SELECT setval(pg_get_serial_sequence('"Departamento"', 'id'), coalesce(max(id)+1, 1), false) FROM "Departamento";
+SELECT setval(pg_get_serial_sequence('"Usuario"', 'id'), coalesce(max(id)+1, 1), false) FROM "Usuario";
