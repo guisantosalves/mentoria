@@ -2,8 +2,10 @@ import { Departamento } from "./departamento";
 import { Login } from "./login";
 import { User } from "./usuario";
 import { Avaliacao } from "./avaliacao";
+import { Curso } from "./curso";
 
 export const UserController = new User();
 export const LoginController = new Login();
 export const DepController = new Departamento();
 export const AvaliacaoController = new Avaliacao();
+export const CursoController = new Curso();

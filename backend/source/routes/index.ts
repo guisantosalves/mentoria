@@ -3,8 +3,9 @@ import {
   AvaliacaoController,
   DepController,
   UserController,
+  LoginController,
+  CursoController,
 } from "../controllers";
-import { LoginController } from "../controllers";
 import { auth } from "../middleware/auth";
 
 const router = express.Router();
@@ -36,5 +37,13 @@ router.get(
 router.post("/avaliacao", AvaliacaoController.createAvaliacao);
 router.put("/avaliacao/:id", AvaliacaoController.updateAvaliacao);
 router.delete("/avaliacao/:id", AvaliacaoController.deleteAvaliacao);
+
+// curso
+router.get("/curso", CursoController.getCurso);
+router.get("/curso/disciplina", CursoController.getCursoAndDisciplinas);
+router.get("/curso/:id", CursoController.getCursoById);
+router.post("/curso", CursoController.createCurso);
+router.put("/curso/:id", CursoController.updateCurso);
+router.delete("/curso/:id", CursoController.deleteCurso);
 
 export default router;

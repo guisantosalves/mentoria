@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
+import { join } from "@prisma/client/runtime/library";
 
 const prisma = new PrismaClient();
 
@@ -8,7 +9,10 @@ export class User {
   getUser(req: Request, res: Response, next: NextFunction) {
     (async () => {
       // executing query
-      const data = await prisma.usuario.findMany({ where: {} });
+      const data = await prisma.usuario.findMany({
+        relationLoadStrategy: "join",
+        where: {},
+      });
       if (data != null) {
         for (const item of data) {
           //@ts-ignore

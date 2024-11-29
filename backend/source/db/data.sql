@@ -53,14 +53,14 @@ VALUES
     (
         2,
         'Administração de Empresas',
-        2,
         1,
+        2,
         true,
         'Campus Sul'
     ),
-    (3, 'Design Gráfico', 3, 3, false, 'Campus Norte'),
-    (4, 'Medicina', 4, 2, true, 'Campus Leste'),
-    (5, 'Direito', 5, 1, false, 'Campus Oeste');
+    (3, 'Design Gráfico', 1, 2, false, 'Campus Norte'),
+    (4, 'Medicina', 1, 2, true, 'Campus Leste'),
+    (5, 'Direito', 1, 2 ƒ, false, 'Campus Oeste');
 
 INSERT INTO
     public."Disciplina" (
@@ -228,3 +228,12 @@ SELECT
     )
 FROM
     "Avaliacao";
+
+SELECT
+    setval (
+        pg_get_serial_sequence ('"Curso"', 'id'),
+        coalesce(max(id) + 1, 1),
+        false
+    )
+FROM
+    "Curso";
