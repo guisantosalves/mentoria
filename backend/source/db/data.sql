@@ -237,3 +237,22 @@ SELECT
     )
 FROM
     "Curso";
+
+
+SELECT
+    setval (
+        pg_get_serial_sequence ('"Disciplina"', 'id'),
+        coalesce(max(id) + 1, 1),
+        false
+    )
+FROM
+    "Disciplina";
+
+SELECT
+    setval (
+        pg_get_serial_sequence ('"Mentoria"', 'id'),
+        coalesce(max(id) + 1, 1),
+        false
+    )
+FROM
+    "Mentoria";

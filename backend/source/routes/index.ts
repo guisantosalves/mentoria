@@ -5,6 +5,8 @@ import {
   UserController,
   LoginController,
   CursoController,
+  DisciplinaController,
+  MentoriaController,
 } from "../controllers";
 import { auth } from "../middleware/auth";
 
@@ -45,5 +47,24 @@ router.get("/curso/:id", CursoController.getCursoById);
 router.post("/curso", CursoController.createCurso);
 router.put("/curso/:id", CursoController.updateCurso);
 router.delete("/curso/:id", CursoController.deleteCurso);
+
+// disciplina
+router.get("/disciplina", DisciplinaController.getDisciplina);
+router.get(
+  "/disciplina/mentoria",
+  DisciplinaController.getDisciplinaAndMentorias
+);
+router.get("/disciplina/:id", DisciplinaController.getDisciplinaById);
+router.post("/disciplina", DisciplinaController.createDisciplina);
+router.put("/disciplina/:id", DisciplinaController.updateDisciplina);
+router.delete("/disciplina/:id", DisciplinaController.deleteDisciplina);
+
+// mentoria
+router.get("/mentoria", MentoriaController.getMentoria);
+router.get("/mentoria/:id", MentoriaController.getMentoriaById);
+router.get("/mentoria/:id/details", MentoriaController.getMentoriaByIdComplete);
+router.post("/mentoria", MentoriaController.createMentoria);
+router.put("/mentoria/:id", MentoriaController.updateMentoria);
+router.delete("/mentoria/:id", MentoriaController.deleteMentoria);
 
 export default router;
