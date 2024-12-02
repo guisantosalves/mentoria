@@ -36,7 +36,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      {/* Cabeçalho */}
       <View style={styles.contentMain}>
         <View style={styles.header}>
           <Icon name="menu" size={24} color="#FFFFFF" />
@@ -45,12 +44,10 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
           </Text>
         </View>
 
-        {/* Barra de pesquisa */}
         <View style={styles.search}>
           <View style={styles.searchContainer}>
             <TextInput
               style={styles.searchInput}
-              placeholder="Buscar mentoria"
               placeholderTextColor="#888"
             />
             <TouchableOpacity onPress={handleSearchPress}>
@@ -59,7 +56,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
           </View>
         </View>
 
-        {/* Ilustração */}
         <View style={styles.illustrationContainer}>
           <Image
             source={require('../../assets/images/computer.png')}
@@ -68,7 +64,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         </View>
       </View>
 
-      {/* Lista de mentorias */}
       <View style={styles.secondaryHeader}>
         <Text style={styles.sectionTitle}>Últimas acessadas</Text>
       </View>
@@ -122,6 +117,7 @@ const styles = StyleSheet.create({
   search: {
     alignItems: 'center',
     padding: 20,
+    
   },
   searchContainer: {
     flexDirection: 'row',
@@ -131,6 +127,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     paddingHorizontal: 15,
     paddingVertical: 10,
+    width: 317
   },
   searchInput: {
     flex: 1,
