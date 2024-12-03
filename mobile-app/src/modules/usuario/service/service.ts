@@ -2,23 +2,23 @@ import { Usuario } from "../../../types/types";
 import { usuarioRepo } from "../repository";
 
 export class UsuarioService {
-  async getAllUsers(): Promise<Usuario[]> {
-    return await usuarioRepo.getAllUsers();
+  async getAllUsers(token: string): Promise<Usuario[]> {
+    return await usuarioRepo.getAllUsers(token);
   }
 
-  async getUserById(id: string): Promise<Usuario> {
-    return await usuarioRepo.getUserById(id);
+  async getUserById(id: string, token: string): Promise<Usuario> {
+    return await usuarioRepo.getUserById(id, token);
   }
 
-  async createUser(data: Usuario) {
+  async createUser(data: Usuario, token: string) {
     return await usuarioRepo.createUser(data);
   }
 
-  async updateUser(data: Usuario, id: string) {
-    return await usuarioRepo.updateUser(data, id);
+  async updateUser(data: Usuario, id: string, token: string) {
+    return await usuarioRepo.updateUser(data, id, token);
   }
 
-  async deleteUser(id: string) {
-    return await usuarioRepo.deleteUser(id);
+  async deleteUser(id: string, token: string) {
+    return await usuarioRepo.deleteUser(id, token);
   }
 }

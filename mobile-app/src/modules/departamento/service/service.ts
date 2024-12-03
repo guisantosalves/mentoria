@@ -2,23 +2,23 @@ import { Departamento } from "../../../types/types";
 import { departamentoRepo } from "../repository";
 
 export class DepartamentoService {
-  async getAllDepartments(): Promise<Departamento[]> {
-    return await departamentoRepo.getAllDepartments();
+  async getAllDepartments(token: string): Promise<Departamento[]> {
+    return await departamentoRepo.getAllDepartments(token);
   }
 
-  async getDepartmentById(id: string): Promise<Departamento> {
-    return await departamentoRepo.getDepartmentById(id);
+  async getDepartmentById(id: string, token: string): Promise<Departamento> {
+    return await departamentoRepo.getDepartmentById(id, token);
   }
 
-  async createDepartment(data: Departamento) {
-    return await departamentoRepo.createDepartment(data);
+  async createDepartment(data: Departamento, token: string) {
+    return await departamentoRepo.createDepartment(data, token);
   }
 
-  async updateDepartment(data: Departamento, id: string) {
-    return await departamentoRepo.updateDepartment(data, id);
+  async updateDepartment(data: Departamento, id: string, token: string) {
+    return await departamentoRepo.updateDepartment(data, id, token);
   }
 
-  async deleteDepartment(id: string) {
-    return await departamentoRepo.deleteDepartment(id);
+  async deleteDepartment(id: string, token: string) {
+    return await departamentoRepo.deleteDepartment(id, token);
   }
 }

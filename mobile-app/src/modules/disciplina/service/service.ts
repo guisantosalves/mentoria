@@ -2,27 +2,27 @@ import { Disciplina } from "../../../types/types";
 import { disciplinaRepo } from "../repository";
 
 export class DisciplinaService {
-  async getAllDisciplinas(): Promise<Disciplina[]> {
-    return await disciplinaRepo.getAllDisciplinas();
+  async getAllDisciplinas(token: string): Promise<Disciplina[]> {
+    return await disciplinaRepo.getAllDisciplinas(token);
   }
 
-  async getDisciplinasAndMentoria() {
-    return await disciplinaRepo.getDisciplinasAndMentoria();
+  async getDisciplinasAndMentoria(token: string) {
+    return await disciplinaRepo.getDisciplinasAndMentoria(token);
   }
 
-  async getDisciplinaById(id: string): Promise<Disciplina> {
-    return await disciplinaRepo.getDisciplinaById(id);
+  async getDisciplinaById(id: string, token: string): Promise<Disciplina> {
+    return await disciplinaRepo.getDisciplinaById(id, token);
   }
 
-  async createDisciplina(data: Disciplina) {
-    return await disciplinaRepo.createDisciplina(data);
+  async createDisciplina(data: Disciplina, token: string) {
+    return await disciplinaRepo.createDisciplina(data, token);
   }
 
-  async updateDisciplina(data: Disciplina, id: string) {
-    return await disciplinaRepo.updateDisciplina(data, id);
+  async updateDisciplina(data: Disciplina, id: string, token: string) {
+    return await disciplinaRepo.updateDisciplina(data, id, token);
   }
 
-  async deleteDisciplina(id: string) {
-    return await disciplinaRepo.deleteDisciplina(id);
+  async deleteDisciplina(id: string, token: string) {
+    return await disciplinaRepo.deleteDisciplina(id, token);
   }
 }

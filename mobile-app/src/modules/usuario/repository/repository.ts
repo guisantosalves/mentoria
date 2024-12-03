@@ -3,12 +3,13 @@ import { API_PORT } from "../../info";
 import { API_URL } from "../../info";
 
 export class UsuarioRepository {
-  async getAllUsers(): Promise<Usuario[]> {
+  async getAllUsers(token: string): Promise<Usuario[]> {
     return fetch(`${API_URL}:${API_PORT}/usuario`, {
       method: "GET",
       mode: "cors",
       headers: {
         Accept: "application/json",
+        Authorization: `Bearer ${token}`,
       },
     })
       .then((response) => {
@@ -25,12 +26,13 @@ export class UsuarioRepository {
       });
   }
 
-  async getUserById(id: string): Promise<Usuario> {
+  async getUserById(id: string, token: string): Promise<Usuario> {
     return fetch(`${API_URL}:${API_PORT}/usuario/${id}`, {
       method: "GET",
       mode: "cors",
       headers: {
         Accept: "application/json",
+        Authorization: `Bearer ${token}`,
       },
     })
       .then((response) => {
@@ -71,13 +73,14 @@ export class UsuarioRepository {
       });
   }
 
-  async updateUser(data: Usuario, id: string) {
+  async updateUser(data: Usuario, id: string, token: string) {
     return fetch(`${API_URL}:${API_PORT}/usuario/${id}`, {
       method: "PUT",
       mode: "cors",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(data),
     })
@@ -95,12 +98,13 @@ export class UsuarioRepository {
       });
   }
 
-  async deleteUser(id: string) {
+  async deleteUser(id: string, token: string) {
     return fetch(`${API_URL}:${API_PORT}/usuario/${id}`, {
       method: "DELETE",
       mode: "cors",
       headers: {
         Accept: "application/json",
+        Authorization: `Bearer ${token}`,
       },
     })
       .then((response) => {

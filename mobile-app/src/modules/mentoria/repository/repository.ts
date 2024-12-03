@@ -3,12 +3,13 @@ import { API_PORT } from "../../info";
 import { API_URL } from "../../info";
 
 export class MentoriaRepository {
-  async getAllMentoria(): Promise<Mentoria[]> {
+  async getAllMentoria(token: string): Promise<Mentoria[]> {
     return fetch(`${API_URL}:${API_PORT}/mentoria`, {
       method: "GET",
       mode: "cors",
       headers: {
         Accept: "application/json",
+        Authorization: `Bearer ${token}`,
       },
     })
       .then((response) => {
@@ -25,12 +26,16 @@ export class MentoriaRepository {
       });
   }
 
-  async getMentoriaAndUsers(mentoriaId: string): Promise<MentoriaDetails> {
+  async getMentoriaAndUsers(
+    mentoriaId: string,
+    token: string
+  ): Promise<MentoriaDetails> {
     return fetch(`${API_URL}:${API_PORT}/mentoria/${mentoriaId}/details`, {
       method: "GET",
       mode: "cors",
       headers: {
         Accept: "application/json",
+        Authorization: `Bearer ${token}`,
       },
     })
       .then((response) => {
@@ -47,12 +52,13 @@ export class MentoriaRepository {
       });
   }
 
-  async getMentoriaById(id: string): Promise<Mentoria> {
+  async getMentoriaById(id: string, token: string): Promise<Mentoria> {
     return fetch(`${API_URL}:${API_PORT}/mentoria/${id}`, {
       method: "GET",
       mode: "cors",
       headers: {
         Accept: "application/json",
+        Authorization: `Bearer ${token}`,
       },
     })
       .then((response) => {
@@ -69,13 +75,14 @@ export class MentoriaRepository {
       });
   }
 
-  async createMentoria(data: Mentoria) {
+  async createMentoria(data: Mentoria, token: string) {
     return fetch(`${API_URL}:${API_PORT}/mentoria`, {
       method: "POST",
       mode: "cors",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(data),
     })
@@ -93,13 +100,14 @@ export class MentoriaRepository {
       });
   }
 
-  async updateMentoria(data: Mentoria, id: string) {
+  async updateMentoria(data: Mentoria, id: string, token: string) {
     return fetch(`${API_URL}:${API_PORT}/mentoria/${id}`, {
       method: "PUT",
       mode: "cors",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(data),
     })
@@ -117,12 +125,13 @@ export class MentoriaRepository {
       });
   }
 
-  async deleteMentoria(id: string) {
+  async deleteMentoria(id: string, token: string) {
     return fetch(`${API_URL}:${API_PORT}/mentoria/${id}`, {
       method: "DELETE",
       mode: "cors",
       headers: {
         Accept: "application/json",
+        Authorization: `Bearer ${token}`,
       },
     })
       .then((response) => {

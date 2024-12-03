@@ -3,12 +3,13 @@ import { API_PORT } from "../../info";
 import { API_URL } from "../../info";
 
 export class DisciplinaRepository {
-  async getAllDisciplinas(): Promise<Disciplina[]> {
+  async getAllDisciplinas(token: string): Promise<Disciplina[]> {
     return fetch(`${API_URL}:${API_PORT}/disciplina`, {
       method: "GET",
       mode: "cors",
       headers: {
         Accept: "application/json",
+        Authorization: `Bearer ${token}`,
       },
     })
       .then((response) => {
@@ -25,12 +26,15 @@ export class DisciplinaRepository {
       });
   }
 
-  async getDisciplinasAndMentoria(): Promise<DisciplineWithMentoria[]> {
+  async getDisciplinasAndMentoria(
+    token: string
+  ): Promise<DisciplineWithMentoria[]> {
     return fetch(`${API_URL}:${API_PORT}/disciplina/mentoria`, {
       method: "GET",
       mode: "cors",
       headers: {
         Accept: "application/json",
+        Authorization: `Bearer ${token}`,
       },
     })
       .then((response) => {
@@ -47,12 +51,13 @@ export class DisciplinaRepository {
       });
   }
 
-  async getDisciplinaById(id: string): Promise<Disciplina> {
+  async getDisciplinaById(id: string, token: string): Promise<Disciplina> {
     return fetch(`${API_URL}:${API_PORT}/disciplina/${id}`, {
       method: "GET",
       mode: "cors",
       headers: {
         Accept: "application/json",
+        Authorization: `Bearer ${token}`,
       },
     })
       .then((response) => {
@@ -69,13 +74,14 @@ export class DisciplinaRepository {
       });
   }
 
-  async createDisciplina(data: Disciplina) {
+  async createDisciplina(data: Disciplina, token: string) {
     return fetch(`${API_URL}:${API_PORT}/disciplina`, {
       method: "POST",
       mode: "cors",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(data),
     })
@@ -93,13 +99,14 @@ export class DisciplinaRepository {
       });
   }
 
-  async updateDisciplina(data: Disciplina, id: string) {
+  async updateDisciplina(data: Disciplina, id: string, token: string) {
     return fetch(`${API_URL}:${API_PORT}/disciplina/${id}`, {
       method: "PUT",
       mode: "cors",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(data),
     })
@@ -117,12 +124,13 @@ export class DisciplinaRepository {
       });
   }
 
-  async deleteDisciplina(id: string) {
+  async deleteDisciplina(id: string, token: string) {
     return fetch(`${API_URL}:${API_PORT}/disciplina/${id}`, {
       method: "DELETE",
       mode: "cors",
       headers: {
         Accept: "application/json",
+        Authorization: `Bearer ${token}`,
       },
     })
       .then((response) => {
