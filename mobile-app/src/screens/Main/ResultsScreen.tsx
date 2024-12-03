@@ -1,7 +1,7 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 type RootStackParamList = {
@@ -27,6 +27,13 @@ const FilterResultScreen: React.FC<FilterResultScreenProps> = ({ route, navigati
     });
   };
 
+  const renderEmptyList = () => (
+    <View style={styles.emptyContainer}>
+      <Image source={require('../../assets/images/cat.png')}style={styles.emptyImage} />
+      <Text style={styles.emptyText}>Nenhum resultado encontrado.</Text>
+    </View>
+  );
+
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
@@ -36,21 +43,37 @@ const FilterResultScreen: React.FC<FilterResultScreenProps> = ({ route, navigati
         <Text style={styles.title}>{query}</Text>
       </View>
 
-      <FlatList
-        data={results}  
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <TouchableOpacity style={styles.item} onPress={() => handleItemPress(item)}>
-            <View style={styles.itemContent}>
-              <Text style={styles.itemTitle}>{item.nome}</Text>  
-              <Text style={styles.itemSubtitle}>
-                {item.data_inicio} - {item.data_fim} 
-              </Text>
-            </View>
-          </TouchableOpacity>
-        )}
-        ListEmptyComponent={<Text style={styles.emptyText}>Nenhum resultado encontrado.</Text>}
-      />
+      <View style={styles.emptyContainer}>
+      <Image source={require('../../assets/images/cat.png')}style={styles.emptyImage} />
+      <Text style={styles.emptyText}>Nenhum resultado encontrado.</Text>
+    </View>
+      {/* {results.length > 0 ? (
+        <FlatList
+          data={results}  
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => (
+            <TouchableOpacity style={styles.item} onPress={() => handleItemPress(item)}>
+              <View style={styles.itemContent}>
+                <Text style={styles.itemTime}>{item.data_inicio} - {item.data_fim}</Text>  
+                <Text style={styles.itemTitle}>{item.nome}</Text>
+                <Text style={styles.itemDescription}>
+                  {item.descricao || 'Descrição não disponível...'}
+                </Text>
+              </View>
+              <View style={styles.itemFooter}>
+                <Text style={styles.itemAuthor}>{item.autor}</Text>
+                <View style={styles.itemRating}>
+                  <Ionicons name="star" size={16} color="#FFD700" />
+                  <Ionicons name="star" size={16} color="#FFD700" />
+                  <Ionicons name="star" size={16} color="#FFD700" />
+                </View>
+              </View>
+            </TouchableOpacity>
+          )}
+        />
+      ) : (
+        renderEmptyList()  
+      )} */}
     </View>
   );
 };
@@ -65,11 +88,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 16,
+    paddingVertical: 10,
     paddingHorizontal: 12,
     backgroundColor: '#fff',
-    borderRadius: 10,
-    borderColor: '#e0e0e0',
+    borderRadius: 25,
+    borderColor: '#cdcdcd94',
     borderWidth: 1,
     marginBottom: 20,
   },
@@ -77,13 +100,18 @@ const styles = StyleSheet.create({
     paddingRight: 8,
   },
   title: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: '500',
     color: '#333',
+    flex: 1,
+    textAlign: 'center',
+  },
+  filterButton: {
+    paddingLeft: 8,
   },
   item: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 10,
+    borderRadius: 12,
     marginBottom: 12,
     padding: 16,
     shadowColor: '#000',
@@ -93,25 +121,51 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   itemContent: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    marginBottom: 10,
+  },
+  itemTime: {
+    fontSize: 14,
+    color: '#6C757D',
+    marginBottom: 4,
   },
   itemTitle: {
     fontSize: 16,
     fontWeight: 'bold',
     color: '#333',
   },
-  itemSubtitle: {
+  itemDescription: {
+    fontSize: 14,
+    color: '#6C757D',
+    marginTop: 4,
+  },
+  itemFooter: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  itemAuthor: {
     fontSize: 14,
     color: '#6C757D',
   },
+  itemRating: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  emptyContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 50,
+  },
+  emptyImage: {
+    width: 300,
+    height: 300,
+    marginBottom: 20,
+  },
   emptyText: {
-    textAlign: 'center',
     fontSize: 16,
     color: '#B0B0B0',
     fontWeight: '600',
-    marginTop: 20,
   },
 });
 

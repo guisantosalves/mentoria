@@ -40,6 +40,8 @@ const OfferMentorshipScreen: React.FC<OfferMentorshipScreenProps> = ({
   const [selectedArea, setSelectedArea] = useState<number>(-1);
   const [dateInicio, setDateInicio] = useState(new Date());
   const [dateFim, setDateFim] = useState(new Date());
+  const [initialDate, setInitialDate] = useState(new Date());
+  const [finalDate, setFinalDate] = useState(new Date());
   const [discplinas, setDisciplinas] = useState<Disciplina[]>([]);
 
   const gettingDisciplinas = useCallback(async () => {
@@ -63,8 +65,8 @@ const OfferMentorshipScreen: React.FC<OfferMentorshipScreenProps> = ({
 
     const mentorshipData: Mentoria = {
       nome,
-      data_fim: dataFimISO,
-      data_inicio: dataInicioISO,
+      data_inicio: initialDate.toISOString(),
+      data_fim: finalDate.toISOString(),
       descricao,
       localizacao,
       mentor: 1,
@@ -144,6 +146,15 @@ const OfferMentorshipScreen: React.FC<OfferMentorshipScreenProps> = ({
         selectedDate={dateFim}
         onDateChange={(newDate) => setDateFim(newDate)}
       />
+        <Text style={styles.fieldLabel}>Data e Hora</Text>
+        <DateTimeSelector
+          selectedDate={initialDate}
+          onDateChange={(newDate) => setInitialDate(newDate)}
+        />
+        <DateTimeSelector
+          selectedDate={finalDate}
+          onDateChange={(newDate) => setFinalDate(newDate)}
+        />
 
         <Text style={styles.fieldLabel}>Descrição da aula</Text>
         <TextInput
@@ -178,8 +189,10 @@ const OfferMentorshipScreen: React.FC<OfferMentorshipScreenProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
     backgroundColor: "#fff",
+    paddingHorizontal: 25, 
+    paddingTop: 20, 
+    paddingBottom: 20,
   },
   headerContainer: {
     backgroundColor: "#fff",
@@ -194,23 +207,23 @@ const styles = StyleSheet.create({
   },
   fieldLabel: {
     color: "#5C6D73",
-    fontSize: 10,
+    fontSize: 12, 
     fontWeight: "600",
     marginBottom: 5,
   },
   input: {
     height: 50,
     borderRadius: 20,
-    paddingHorizontal: 10,
-    marginBottom: 15,
+    paddingHorizontal: 15, 
+    marginBottom: 20,
     backgroundColor: "#D9D9D966",
     color: "#5C6D73",
     fontWeight: "600",
-    fontSize: 12,
+    fontSize: 14, 
   },
   pickerContainer: {
     borderRadius: 20,
-    marginBottom: 15,
+    marginBottom: 20,
     backgroundColor: "#D9D9D966",
     color: "#5C6D73",
     fontWeight: "600",
@@ -228,16 +241,16 @@ const styles = StyleSheet.create({
     borderWidth: 0,
   },
   textArea: {
-    height: 100,
+    height: 120, 
     borderRadius: 20,
-    paddingHorizontal: 10,
-    paddingVertical: 10,
+    paddingHorizontal: 15, 
+    paddingVertical: 15, 
     backgroundColor: "#D9D9D966",
     textAlignVertical: "top",
-    marginBottom: 15,
+    marginBottom: 20, 
     color: "#5C6D73",
     fontWeight: "600",
-    fontSize: 12,
+    fontSize: 14, 
   },
   buttonContainer: {
     flexDirection: "row",
@@ -273,5 +286,6 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
 });
+
 
 export default OfferMentorshipScreen;
