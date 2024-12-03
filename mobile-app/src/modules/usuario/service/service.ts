@@ -6,6 +6,10 @@ export class UsuarioService {
     return await usuarioRepo.getAllUsers(token);
   }
 
+  async getUserByIdAndMentorias(userId: string, token: string) {
+    return await usuarioRepo.getUserByIdAndMentorias(userId, token);
+  }
+
   async getUserById(id: string, token: string): Promise<Usuario> {
     return await usuarioRepo.getUserById(id, token);
   }

@@ -1,7 +1,14 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
-import { DrawerNavigationProp } from '@react-navigation/drawer';
+import React from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  SafeAreaView,
+} from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
+import { DrawerNavigationProp } from "@react-navigation/drawer";
 
 interface ProfileScreenProps {
   navigation: DrawerNavigationProp<any>;
@@ -9,19 +16,24 @@ interface ProfileScreenProps {
 
 const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
   const handleLogout = () => {
-    console.log('Usuário deslogado');
+    console.log("Usuário deslogado");
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Icon name="menu" size={24} color="#263238" onPress={() => navigation.openDrawer()} />
+        <Icon
+          name="menu"
+          size={24}
+          color="#263238"
+          onPress={() => navigation.openDrawer()}
+        />
         <Text style={styles.headerTitle}>Perfil</Text>
       </View>
 
       <View style={styles.profileContainer}>
         <Image
-          source={require('../../assets/images/lotus.png')} 
+          source={require("../../assets/images/lotus.png")}
           style={styles.avatar}
         />
         <Text style={styles.username}>João da Silva</Text>
@@ -35,28 +47,28 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
           <Text style={styles.logoutText}>Sair</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     padding: 16,
   },
   headerTitle: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 20,
-    fontWeight: '300',
+    fontWeight: "300",
     marginLeft: 16,
   },
   profileContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 30,
     paddingHorizontal: 16,
   },
@@ -68,40 +80,40 @@ const styles = StyleSheet.create({
   },
   username: {
     fontSize: 22,
-    fontWeight: 'bold',
-    color: '#263238',
+    fontWeight: "bold",
+    color: "#263238",
     marginBottom: 20,
   },
   infoContainer: {
-    width: '100%',
+    width: "100%",
     marginBottom: 20,
   },
   infoLabel: {
     fontSize: 14,
-    fontWeight: '600',
-    color: '#5C6D73',
+    fontWeight: "600",
+    color: "#5C6D73",
     marginBottom: 5,
   },
   infoText: {
     fontSize: 16,
-    color: '#263238',
+    color: "#263238",
     padding: 12,
-    backgroundColor: '#D9D9D966',
+    backgroundColor: "#D9D9D966",
     borderRadius: 8,
     marginBottom: 15,
   },
   logoutButton: {
     marginTop: 20,
-    backgroundColor: '#D32F2F',
+    backgroundColor: "#D32F2F",
     paddingVertical: 12,
     borderRadius: 8,
-    alignItems: 'center',
-    width: '100%',
+    alignItems: "center",
+    width: "100%",
   },
   logoutText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
 });
 

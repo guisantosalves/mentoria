@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -9,6 +9,10 @@ import {
   SafeAreaView,
 } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { usuarioServ } from "../../modules/usuario/service";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Buffer } from "buffer";
+import { Mentoria, Usuario, UsuarioAndMentoria } from "../../types/types";
 
 export type Session = {
   id: string;
@@ -21,22 +25,9 @@ export type Session = {
   teacherPhoto: string;
 };
 
-const sessions: Session[] = [
-  {
-    id: "1",
-    day: "Seg. 10 Out.",
-    startTime: "18:00",
-    endTime: "19:20",
-    title: "Desenvolvimento mobile",
-    description: "Focado para alunos iniciantes que querem bla bla bla ....",
-    teacher: "Marcos Antônio",
-    teacherPhoto: "https://via.placeholder.com/40",
-  },
-];
-
 type RootStackParamList = {
   SessionsScreen: undefined;
-  SessionDetailsScreen: { session: Session };
+  SessionDetailsScreen: { session: any };
 };
 
 type SessionsScreenProps = {
@@ -44,32 +35,89 @@ type SessionsScreenProps = {
 };
 
 const SessionsScreen: React.FC<SessionsScreenProps> = ({ navigation }) => {
-  const renderSession = ({ item }: { item: Session }) => (
-    <TouchableOpacity
-      style={styles.sessionCard}
-      onPress={() =>
-        navigation.navigate("SessionDetailsScreen", { session: item })
-      }
-    >
-      <View style={styles.timeContainer}>
-        <Text style={styles.timeText}>{item.startTime}</Text>
-        <Text style={styles.separator}>|</Text>
-        <Text style={styles.timeText}>{item.endTime}</Text>
-      </View>
+  const [dataFromApi, setDataFromApi] = useState<any>();
+  const [allUsers, setAllUsers] = useState<Usuario[]>([]);
 
-      <View style={styles.detailsContainer}>
-        <Text style={styles.title}>{item.title}</Text>
-        <Text style={styles.description}>{item.description}</Text>
-        <View style={styles.teacherContainer}>
-          <Image
-            source={{ uri: item.teacherPhoto }}
-            style={styles.teacherPhoto}
-          />
-          <Text style={styles.teacherName}>{item.teacher}</Text>
+  const gettingUsersMentoria = useCallback(async () => {
+    const token = await AsyncStorage.getItem("@token");
+
+    if (token) {
+      const parts = token
+        .split(".")
+        .map((part) =>
+          Buffer.from(
+            part.replace(/-/g, "+").replace(/_/g, "/"),
+            "base64"
+          ).toString()
+        );
+
+      const payload = JSON.parse(parts[1]);
+
+      if (payload.id) {
+        const data = await usuarioServ.getUserByIdAndMentorias(
+          payload.id,
+          token
+        );
+        setDataFromApi(data);
+      }
+    }
+  }, []);
+
+  const gettingAllUsers = useCallback(async () => {
+    const token = await AsyncStorage.getItem("@token");
+
+    if (token) {
+      const data = await usuarioServ.getAllUsers(token);
+      setAllUsers(data);
+    }
+  }, []);
+
+  useEffect(() => {
+    gettingUsersMentoria();
+    gettingAllUsers();
+  }, [gettingUsersMentoria, gettingAllUsers]);
+
+  const renderSession = (item: any) => {
+    return (
+      <TouchableOpacity
+        style={styles.sessionCard}
+        onPress={() =>
+          navigation.navigate("SessionDetailsScreen", { session: item })
+        }
+      >
+        <View style={styles.timeContainer}>
+          <Text style={styles.timeText}>
+            {new Date(item.mentoria.data_inicio).getHours()}
+          </Text>
+          <Text style={styles.separator}>|</Text>
+          <Text style={styles.timeText}>
+            {new Date(item.mentoria.data_fim).getHours()}
+          </Text>
         </View>
-      </View>
-    </TouchableOpacity>
-  );
+
+        <View style={styles.detailsContainer}>
+          <Text style={styles.title}>{item.mentoria.nome}</Text>
+          <Text style={styles.description}>{item.mentoria.descricao}</Text>
+          <View style={styles.teacherContainer}>
+            <Image
+              source={{
+                uri: allUsers.filter(
+                  (currUser) => currUser.id === item.usuarioId
+                )[0]?.foto,
+              }}
+              style={styles.teacherPhoto}
+            />
+            <Text style={styles.teacherName}>
+              {
+                allUsers.filter((currUser) => currUser.id === item.usuarioId)[0]
+                  ?.nome
+              }
+            </Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -77,9 +125,9 @@ const SessionsScreen: React.FC<SessionsScreenProps> = ({ navigation }) => {
         <Text style={styles.header}>Suas Aulas</Text>
       </View>
       <FlatList
-        data={sessions}
-        renderItem={renderSession}
-        keyExtractor={(item) => item.id}
+        data={dataFromApi && dataFromApi.mentorias && dataFromApi.mentorias}
+        renderItem={({ item }) => renderSession(item)}
+        keyExtractor={(item) => String(item.id)}
         contentContainerStyle={styles.listContainer}
       />
     </SafeAreaView>
