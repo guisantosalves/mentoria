@@ -1,39 +1,78 @@
-import React from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-
+import { Login } from "../../types/types"; 
+import { UsuarioServ } from "../../modules/login/service/index"; 
+import { useAuth } from "../../navigation/context/AuthContext"; 
 type RootStackParamList = {
   Login: undefined;
   Signup: undefined;
   ForgotPassword: undefined;
+  HomeScreen: undefined; 
 };
 
 type LoginScreenProps = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
 const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
+  const [email, setEmail] = useState<string>('');
+  const [senha, setSenha] = useState<string>('');
+  const { login } = useAuth(); 
+
+  const handleLogin = async () => {
+    if (!email || !senha) {
+      Alert.alert('Erro', 'Preencha todos os campos');
+      return;
+    }
+
+    const loginData: Login = { email, senha };
+    try {
+      const response = await UsuarioServ.logging(loginData);
+
+      if (response && response.token) {
+        login(response.token); 
+        Alert.alert('Sucesso', 'Login realizado com sucesso!');
+        navigation.navigate('HomeScreen'); 
+      } else {
+        Alert.alert('Erro', 'Usuário ou senha incorretos');
+      }
+    } catch (error) {
+      console.error('Erro ao tentar realizar o login:', error);
+      Alert.alert('Erro', 'Ocorreu um erro, tente novamente mais tarde');
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Login</Text>
 
-      <Text style={styles.label}>Nome</Text>
-      <TextInput style={styles.input} placeholder="nome de usuario" />
+      <Text style={styles.label}>Email</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Digite seu email"
+        value={email}
+        onChangeText={setEmail}
+      />
 
       <Text style={styles.label}>Senha</Text>
-      <TextInput style={styles.input} placeholder="******" secureTextEntry />
+      <TextInput
+        style={styles.input}
+        placeholder="******"
+        secureTextEntry
+        value={senha}
+        onChangeText={setSenha}
+      />
 
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Acessar</Text>
       </TouchableOpacity>
 
-      <Text style={styles.footerText}>
+      {/* <Text style={styles.footerText}>
         Esqueceu a senha?{' '}
-        <Text
-          style={styles.linkText}
-          onPress={() => navigation.navigate('ForgotPassword')}
-        >
+        <Text style={styles.linkText} onPress={() => navigation.navigate('ForgotPassword')}>
           Recuperar
         </Text>
-      </Text>
+      </Text> */}
+
       <Text style={styles.footerText}>
         Novo por aqui?{' '}
         <Text style={styles.linkText} onPress={() => navigation.navigate('Signup')}>
@@ -60,9 +99,9 @@ const styles = StyleSheet.create({
   },
   label: {
     alignSelf: 'flex-start',
-    color: "#5C6D73",
+    color: '#5C6D73',
     fontSize: 10,
-    fontWeight: "600",
+    fontWeight: '600',
     marginBottom: 5,
   },
   input: {

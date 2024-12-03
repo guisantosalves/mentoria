@@ -12,6 +12,7 @@ import DateTimeSelector from "../../components/DateTimeSelector";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { Mentoria } from "../../types/types";
 import { API_URL, API_PORT } from "../../modules/info";
+import { mentoriaServ } from "../../modules/mentoria/service";
 
 const url = `${API_URL}:${API_PORT}/mentorias`;
 
@@ -48,32 +49,20 @@ const OfferMentorshipScreen: React.FC<OfferMentorshipScreenProps> = ({ navigatio
       usuarios: [], 
     };
 
-    console.log("Enviando dados:", mentorshipData);
-  
-    try {
-      const response = await fetch(url, {  
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(mentorshipData),
-      });
+    const token = "await AsyncStorage.getItem('token')";
 
-      console.log("Resposta da API:", response); 
-  
-      if (response.ok) {
-        Alert.alert("Sucesso", "Mentoria cadastrada com sucesso!");
-        setNome("");
-        setLocalizacao("");
-        setDescricao("");
-        setSelectedArea("");
-        setDate(new Date());
-        navigation.goBack(); 
+    console.log("Enviando dados:", mentorshipData);
+    try {
+      const response = await mentoriaServ.creatementoria(mentorshipData, token);
+      if (response.success) {
+        Alert.alert("Sucesso", "Mentoria registrada com sucesso!");
+        navigation.goBack();
       } else {
-        Alert.alert("Erro", "Não foi possível cadastrar a mentoria.");
+        Alert.alert("Erro", "Houve um erro ao registrar a mentoria.");
       }
     } catch (error) {
-      Alert.alert("Erro", "Ocorreu um erro ao cadastrar a mentoria.");
+      console.error("Erro ao criar a mentoria:", error);
+      Alert.alert("Erro", "Algo deu errado. Tente novamente mais tarde.");
     }
   };
   

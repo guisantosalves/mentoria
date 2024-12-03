@@ -1,6 +1,8 @@
-import React from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { usuarioServ } from '../../modules/usuario/service'; 
+import { useAuth } from "../../navigation/context/AuthContext"; 
 
 type RootStackParamList = {
   Login: undefined;
@@ -11,20 +13,76 @@ type RootStackParamList = {
 type SignupScreenProps = NativeStackScreenProps<RootStackParamList, 'Signup'>;
 
 const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
+  const { token } = useAuth(); 
+  const [nome, setNome] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [senha, setSenha] = useState<string>('');
+
+  const createUser = async () => {
+    if (!nome || !email || !senha) {
+      Alert.alert('Erro', 'Por favor, preencha todos os campos.');
+      return;
+    }
+
+    try {
+      const usuarioData = {
+        nome,
+        email,
+        senha,
+        cpf: '',
+        rg: '', 
+        foto: '', 
+        cursoId: 1, 
+        tipo: 0, 
+        disciplinas: [], 
+        mentorias: [] 
+      };
+
+      const response = await usuarioServ.createUser(usuarioData, token || '');
+
+      if (response && response.success) {
+        Alert.alert('Sucesso', 'Cadastro realizado com sucesso!');
+        navigation.navigate('Login'); 
+      } else {
+        Alert.alert('Erro', response.message || 'Erro ao criar usuário');
+      }
+    } catch (error) {
+      console.error('Erro ao tentar criar o usuário:', error);
+      Alert.alert('Erro', 'Ocorreu um erro, tente novamente mais tarde.');
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Cadastro</Text>
 
       <Text style={styles.label}>Nome</Text>
-      <TextInput style={styles.input} placeholder="Digite seu nome" />
+      <TextInput
+        style={styles.input}
+        placeholder="Digite seu nome"
+        value={nome}
+        onChangeText={setNome}
+      />
 
       <Text style={styles.label}>Email</Text>
-      <TextInput style={styles.input} placeholder="Digite seu email" keyboardType="email-address" />
+      <TextInput
+        style={styles.input}
+        placeholder="Digite seu email"
+        keyboardType="email-address"
+        value={email}
+        onChangeText={setEmail}
+      />
 
       <Text style={styles.label}>Senha</Text>
-      <TextInput style={styles.input} placeholder="Digite sua senha" secureTextEntry />
+      <TextInput
+        style={styles.input}
+        placeholder="Digite sua senha"
+        secureTextEntry
+        value={senha}
+        onChangeText={setSenha}
+      />
 
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={createUser}>
         <Text style={styles.buttonText}>Cadastrar</Text>
       </TouchableOpacity>
 
@@ -54,9 +112,9 @@ const styles = StyleSheet.create({
   },
   label: {
     alignSelf: 'flex-start',
-    color: "#5C6D73",
+    color: '#5C6D73',
     fontSize: 10,
-    fontWeight: "600",
+    fontWeight: '600',
     marginBottom: 5,
   },
   input: {

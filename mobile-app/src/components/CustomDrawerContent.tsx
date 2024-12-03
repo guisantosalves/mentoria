@@ -6,24 +6,35 @@ import {
   DrawerContentComponentProps,
 } from '@react-navigation/drawer';
 import { View, Text, StyleSheet, Image } from 'react-native';
+import { useAuth } from '../navigation/context/AuthContext'; 
 
-const CustomDrawerContent: React.FC<DrawerContentComponentProps> = (props) => (
-  <DrawerContentScrollView {...props}>
-    <View style={styles.drawerHeader}>
-      <Image
-        source={require('../assets/images/lotus.png')} 
-        style={styles.avatar}
+const CustomDrawerContent: React.FC<DrawerContentComponentProps> = (props) => {
+  const { logout } = useAuth(); 
+  const { navigation } = props;
+
+  const handleLogout = () => {
+    logout(); 
+    navigation.navigate('Login'); 
+  };
+
+  return (
+    <DrawerContentScrollView {...props}>
+      <View style={styles.drawerHeader}>
+        <Image
+          source={require('../assets/images/lotus.png')} 
+          style={styles.avatar}
+        />
+        <Text style={styles.username}>Olá, Usuário!</Text>
+      </View>
+      <DrawerItemList {...props} />
+      <DrawerItem
+        label="Sair"
+        onPress={handleLogout} 
+        labelStyle={styles.logoutLabel}
       />
-      <Text style={styles.username}>Olá, Usuário!</Text>
-    </View>
-    <DrawerItemList {...props} />
-    <DrawerItem
-      label="Sair"
-      onPress={() => console.log('Logout Pressed')}
-      labelStyle={styles.logoutLabel}
-    />
-  </DrawerContentScrollView>
-);
+    </DrawerContentScrollView>
+  );
+};
 
 export default CustomDrawerContent;
 
