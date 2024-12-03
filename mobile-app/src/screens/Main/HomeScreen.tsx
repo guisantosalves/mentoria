@@ -55,41 +55,41 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         </View>
 
         <View style={styles.illustrationContainer}>
-          <Image source={require('../../assets/images/computer.png')} style={styles.illustration} />
+          <Image source={require('../../assets/images/study.png')} style={styles.illustration} />
         </View>
       </View>
 
-      <View style={styles.secondaryHeader}>
-        <Text style={styles.sectionTitle}>Últimas acessadas</Text>
-      </View>
-      <FlatList
-        data={data.slice(-4)}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            style={styles.listItem}
-            onPress={() =>
-              navigation.navigate('SessionDetailsScreen', {
-                session: {
-                  title: item.title,
-                  startTime: item.time.split(' às ')[0],
-                  endTime: item.time.split(' às ')[1],
-                  teacher: 'Nome do Mentor',
-                  description: 'Descrição detalhada da sessão',
-                },
-              })
-            }
-          >
-            <Icon name="time-outline" size={20} color="#6C757D" />
-            <View style={styles.listItemContent}>
-              <Text style={styles.listItemSubtitle}>{item.date}</Text>
-              <Text style={styles.listItemTitle}>{item.title}</Text>
-              <Text style={styles.listItemSubtitle}>{item.time}</Text>
-            </View>
-            <Icon name="chevron-forward-outline" size={20} color="#6C757D" />
-          </TouchableOpacity>
-        )}
-      />
+        <View style={styles.secondaryHeader}>
+          <Text style={styles.sectionTitle}>Últimas acessadas</Text>
+        </View>
+        <FlatList
+          data={data.slice(-4)}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              style={styles.listItem}
+              onPress={() =>
+                navigation.navigate('SessionDetailsScreen', {
+                  session: {
+                    title: item.title,
+                    startTime: item.time.split(' às ')[0],
+                    endTime: item.time.split(' às ')[1],
+                    teacher: 'Nome do Mentor',
+                    description: 'Descrição detalhada da sessão',
+                  },
+                })
+              }
+            >
+              <Icon name="time-outline" size={20} color="#6C757D" />
+              <View style={styles.listItemContent}>
+                <Text style={styles.listItemSubtitle}>{item.date}</Text>
+                <Text style={styles.listItemTitle}>{item.title}</Text>
+                <Text style={styles.listItemSubtitle}>{item.time}</Text>
+              </View>
+              <Icon name="chevron-forward-outline" size={20} color="#6C757D" />
+            </TouchableOpacity>
+          )}
+        />
     </View>
   );
 };
@@ -97,7 +97,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#F5F5F5',
   },
   header: {
     flexDirection: 'row',
@@ -120,11 +120,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#263238',
     borderBottomLeftRadius: 25,
     borderBottomRightRadius: 25,
-    paddingBottom: 50,
+    // paddingBottom: 50,
   },
   search: {
     alignItems: 'center',
-    padding: 20,
+    // padding: 20,
   },
   searchContainer: {
     flexDirection: 'row',
@@ -146,11 +146,11 @@ const styles = StyleSheet.create({
   },
   illustrationContainer: {
     alignItems: 'center',
-    marginVertical: 24,
+    // marginVertical: 24,
   },
   illustration: {
-    width: 170,
-    height: 170,
+    width: 300,
+    height: 300,
     resizeMode: 'contain',
   },
   secondaryHeader: {
@@ -166,8 +166,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0',
+    borderTopWidth: 1,
+    borderTopColor: '#E0E0E0',
   },
   listItemContent: {
     flex: 1,
