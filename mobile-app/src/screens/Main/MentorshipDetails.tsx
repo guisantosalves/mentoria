@@ -1,13 +1,13 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, SafeAreaView } from "react-native";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { Mentoria } from "../../types/types";
-import Icon from "react-native-vector-icons/Ionicons"; 
+import Icon from "react-native-vector-icons/Ionicons";
 
 type RootStackParamList = {
   MentorshipDetails: { mentoria: Mentoria };
-  EditMentorshipScreen: { mentoria: Mentoria };  
+  EditMentorshipScreen: { mentoria: Mentoria };
 };
 
 type MentorshipDetailsScreenProps = {
@@ -15,11 +15,14 @@ type MentorshipDetailsScreenProps = {
   navigation: StackNavigationProp<RootStackParamList, "MentorshipDetails">;
 };
 
-const MentorshipDetailsScreen: React.FC<MentorshipDetailsScreenProps> = ({ route, navigation }) => {
+const MentorshipDetailsScreen: React.FC<MentorshipDetailsScreenProps> = ({
+  route,
+  navigation,
+}) => {
   const { mentoria } = route.params;
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
@@ -41,7 +44,7 @@ const MentorshipDetailsScreen: React.FC<MentorshipDetailsScreenProps> = ({ route
           <Text style={styles.editButtonText}>Editar</Text>
         </TouchableOpacity>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -90,6 +93,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#263238",
     borderRadius: 20,
     alignItems: "center",
+<<<<<<< HEAD
+=======
+    marginTop: 20,
+>>>>>>> fcc17cd (home screen)
   },
   editButtonText: {
     color: "#fff",

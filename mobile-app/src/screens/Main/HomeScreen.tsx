@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -11,6 +11,10 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
+import { Mentoria, Usuario } from "../../types/types";
+import { mentoriaServ } from "../../modules/mentoria/service";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { usuarioServ } from "../../modules/usuario/service";
 
 interface ItemData {
   id: string;
@@ -59,17 +63,42 @@ interface HomeScreenProps {
 }
 
 const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
-  const [activeTab, setActiveTab] = useState<string>('Procurar');
-  const [searchQuery, setSearchQuery] = useState<string>('');  
+  const [activeTab, setActiveTab] = useState<string>("Procurar");
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [mentorships, setMentorships] = useState<Mentoria[]>([]);
+  const [allUsers, setAllUsers] = useState<Usuario[]>([]);
 
   const handleTabPress = (tabName: string) => {
     setActiveTab(tabName);
   };
 
+  useEffect(() => {
+    const fetchMentorships = async () => {
+      const token = await AsyncStorage.getItem("@token");
+      try {
+        const data = await mentoriaServ.getAllmentorias(token || "");
+        setMentorships(data);
+      } catch (error) {
+        console.error("Erro ao buscar mentorias:", error);
+      }
+    };
+
+    fetchMentorships();
+  }, []);
+
+  const gettingAllUsers = useCallback(async () => {
+    const token = await AsyncStorage.getItem("@token");
+
+    if (token) {
+      const data = await usuarioServ.getAllUsers(token);
+      setAllUsers(data);
+    }
+  }, []);
+
   const handleSearchPress = () => {
-    navigation.navigate('FilterResult', {
-      query: searchQuery,  
-      results: data,       
+    navigation.navigate("FilterResult", {
+      query: searchQuery,
+      results: data,
     });
   };
 
@@ -93,8 +122,8 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
             <TextInput
               style={styles.searchInput}
               placeholderTextColor="#888"
-              value={searchQuery} 
-              onChangeText={(text) => setSearchQuery(text)}  
+              value={searchQuery}
+              onChangeText={(text) => setSearchQuery(text)}
             />
             <TouchableOpacity onPress={handleSearchPress}>
               <Icon
@@ -119,37 +148,50 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         <Text style={styles.sectionTitle}>Últimas acessadas</Text>
       </View>
       <FlatList
-        data={data.slice(-4)}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            style={styles.listItem}
-            onPress={() =>
-              navigation.navigate('SessionDetailsScreen', {
-                session: {
-                  title: item.title,
-                  startTime: item.time.split(' às ')[0],
-                  endTime: item.time.split(' às ')[1],
-                  teacher: 'Nome do Mentor',
-                  description: 'Descrição detalhada da sessão',
-                },
-              })
-            }
-          >
-            <Icon name="time-outline" size={20} color="#6C757D" />
-            <View style={styles.listItemContent}>
-              <Text style={styles.listItemSubtitle}>{item.date}</Text>
-              <Text style={styles.listItemTitle}>{item.title}</Text>
-              <Text style={styles.listItemSubtitle}>{item.time}</Text>
-            </View>
-            <Icon name="chevron-forward-outline" size={20} color="#6C757D" />
-          </TouchableOpacity>
-        )}
+        data={mentorships.slice(-4)}
+        keyExtractor={(item) => String(item.id)}
+        renderItem={({ item }) => {
+          return (
+            <TouchableOpacity
+              style={styles.listItem}
+              onPress={() =>
+                navigation.navigate("SessionDetailsScreen", {
+                  session: {
+                    title: item.nome,
+                    startTime: new Date(item.data_inicio).getDate().toString(),
+                    endTime: new Date(item.data_fim).getDate().toString(),
+                    teacher: allUsers.filter(
+                      (currUser, index) => currUser.id === item.mentor
+                    )[0].nome,
+                    description: item.descricao,
+                  },
+                })
+              }
+            >
+              <Icon name="time-outline" size={20} color="#6C757D" />
+              <View style={styles.listItemContent}>
+                <Text style={styles.listItemSubtitle}>
+                  {new Date(item.data_inicio).getDay().toString()}/
+                  {new Date(item.data_inicio).getUTCMonth().toString()}/
+                  {new Date(item.data_inicio).getFullYear().toString()} -{" "}
+                  {new Date(item.data_inicio).getUTCHours().toString()}
+                </Text>
+                <Text style={styles.listItemTitle}>{item.nome}</Text>
+                <Text style={styles.listItemSubtitle}>
+                  Período: {new Date(item.data_fim).getDay().toString()}/
+                  {new Date(item.data_fim).getUTCMonth().toString()}/
+                  {new Date(item.data_fim).getFullYear().toString()} -{" "}
+                  {new Date(item.data_fim).getUTCHours().toString()}
+                </Text>
+              </View>
+              <Icon name="chevron-forward-outline" size={20} color="#6C757D" />
+            </TouchableOpacity>
+          );
+        }}
       />
     </SafeAreaView>
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {
