@@ -8,40 +8,50 @@ import {
   Alert,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
-import DateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
-import DateTimeSelector from '../../components/DateTimeSelector';
+import DateTimeSelector from "../../components/DateTimeSelector";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { Mentoria } from "../../types/types";
+import { API_URL, API_PORT } from "../../modules/info";
 
-const OfferMentorshipScreen = () => {
+const url = `${API_URL}:${API_PORT}/mentorias`;
+
+type RootStackParamList = {
+  MentorshipList: undefined;
+  OfferMentorship: undefined;
+};
+
+type OfferMentorshipScreenProps = {
+  navigation: StackNavigationProp<RootStackParamList, "OfferMentorship">;
+};
+
+const OfferMentorshipScreen: React.FC<OfferMentorshipScreenProps> = ({ navigation }) => {
   const [nome, setNome] = useState("");
   const [localizacao, setLocalizacao] = useState("");
   const [descricao, setDescricao] = useState("");
   const [selectedArea, setSelectedArea] = useState("");
   const [date, setDate] = useState(new Date());
-  const [showPicker, setShowPicker] = useState(false);
-
-  const handleDateChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
-    if (selectedDate) {
-      setDate(selectedDate);
-    }
-    setShowPicker(false);
-  };
 
   const handleRegister = async () => {
     if (!nome || !localizacao || !descricao || !selectedArea) {
       Alert.alert("Erro", "Preencha todos os campos.");
       return;
     }
-
-    const mentorshipData = {
+  
+    const mentorshipData: Mentoria = {
       nome,
-      localizacao,
+      data_inicio: date.toISOString(), 
+      data_fim: date.toISOString(),    
       descricao,
-      area: selectedArea,
-      data_inicio: date.toISOString(),
+      localizacao,
+      mentor: 1,
+      disciplinaId: 1, 
+      usuarios: [], 
     };
 
+    console.log("Enviando dados:", mentorshipData);
+  
     try {
-      const response = await fetch("https://seu-backend.com/mentorias", {
+      const response = await fetch(url, {  
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -49,24 +59,27 @@ const OfferMentorshipScreen = () => {
         body: JSON.stringify(mentorshipData),
       });
 
+      console.log("Resposta da API:", response); 
+  
       if (response.ok) {
-        Alert.alert("Sucesso", "Aula cadastrada com sucesso!");
+        Alert.alert("Sucesso", "Mentoria cadastrada com sucesso!");
         setNome("");
         setLocalizacao("");
         setDescricao("");
         setSelectedArea("");
         setDate(new Date());
+        navigation.goBack(); 
       } else {
-        Alert.alert("Erro", "Não foi possível cadastrar a aula.");
+        Alert.alert("Erro", "Não foi possível cadastrar a mentoria.");
       }
     } catch (error) {
-      Alert.alert("Erro", "Ocorreu um erro ao cadastrar a aula.");
+      Alert.alert("Erro", "Ocorreu um erro ao cadastrar a mentoria.");
     }
   };
+  
 
   return (
     <View style={styles.container}>
-      {/* Cabeçalho */}
       <View style={styles.headerContainer}>
         <Text style={styles.header}>Cadastro</Text>
       </View>
@@ -117,9 +130,18 @@ const OfferMentorshipScreen = () => {
         numberOfLines={4}
       />
 
-      <TouchableOpacity style={styles.registerButton} onPress={handleRegister}>
-        <Text style={styles.registerButtonText}>Registrar aula</Text>
-      </TouchableOpacity>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()} 
+        >
+          <Text style={styles.backButtonText}>Cancelar</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.registerButton} onPress={handleRegister}>
+          <Text style={styles.registerButtonText}>Registrar aula</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -134,36 +156,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     marginBottom: 20,
     padding: 15,
-    elevation: 3, 
+    elevation: 3,
   },
   header: {
     fontSize: 24,
     fontWeight: "700",
     color: "#263238",
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20,
-  },
-  profilePicture: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: "#e0e0e0",
-    justifyContent: "center",
-    alignItems: "center",
-    alignSelf: "center",
-    marginBottom: 10,
-  },
-  addPhotoText: {
-    fontSize: 32,
-    color: "#888",
-  },
-  label: {
-    textAlign: "center",
-    color: "#666",
-    marginBottom: 20,
   },
   fieldLabel: {
     color: "#5C6D73",
@@ -178,17 +176,17 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     backgroundColor: "#D9D9D966",
     color: "#5C6D73",
-    fontWeight: '600',
-    fontSize: 12
+    fontWeight: "600",
+    fontSize: 12,
   },
   pickerContainer: {
     borderRadius: 20,
     marginBottom: 15,
     backgroundColor: "#D9D9D966",
     color: "#5C6D73",
-    fontWeight: '600',
+    fontWeight: "600",
     fontSize: 12,
-    overflow: 'hidden',
+    overflow: "hidden",
     borderWidth: 0,
   },
   picker: {
@@ -196,24 +194,9 @@ const styles = StyleSheet.create({
     width: "100%",
     backgroundColor: "#D9D9D966",
     color: "#5C6D73",
-    fontWeight: '600',
+    fontWeight: "600",
     fontSize: 12,
     borderWidth: 0,
-  },
-  dateInput: {
-    height: 50,
-    borderColor: "#ccc",
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    justifyContent: "center",
-    backgroundColor: "#D9D9D966",
-    marginBottom: 15,
-    borderWidth: 0,
-  },
-  dateText: {
-    color: "#5C6D73",
-    fontWeight: '600',
-    fontSize: 12
   },
   textArea: {
     height: 100,
@@ -224,18 +207,39 @@ const styles = StyleSheet.create({
     textAlignVertical: "top",
     marginBottom: 15,
     color: "#5C6D73",
-    fontWeight: '600',
-    fontSize: 12
+    fontWeight: "600",
+    fontSize: 12,
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 20,
+  },
+  backButton: {
+    height: 45,
+    flex: 1,
+    marginRight: 10,
+    backgroundColor: "#ccc",
+    borderRadius: 20,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  backButtonText: {
+    color: "#fff",
+    fontSize: 14,
+    fontWeight: "600",
   },
   registerButton: {
     height: 45,
+    flex: 1,
+    marginLeft: 10,
     backgroundColor: "#263238",
     borderRadius: 20,
     justifyContent: "center",
     alignItems: "center",
   },
   registerButtonText: {
-    color: "#FFFFFF",
+    color: "#fff",
     fontSize: 14,
     fontWeight: "600",
   },
