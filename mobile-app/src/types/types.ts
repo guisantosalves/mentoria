@@ -56,7 +56,7 @@ export interface Disciplina {
   data_fim: string;
   descricao: string;
   cursoId: number;
-  usuarios: number[];
+  usuarios?: number[];
 }
 
 export interface Mentoria {

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, FlatList, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, FlatList, StyleSheet, SafeAreaView } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
 type RootStackParamList = {
@@ -20,7 +20,7 @@ const MentorshipListScreen: React.FC<MentorshipListScreenProps> = ({ navigation 
   ];
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       {/* Cabeçalho */}
       <View style={styles.headerContainer}>
         <Text style={styles.header}>Aulas Cadastradas</Text>
@@ -45,7 +45,7 @@ const MentorshipListScreen: React.FC<MentorshipListScreenProps> = ({ navigation 
       >
         <Text style={styles.addButtonText}>+</Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 };
 
