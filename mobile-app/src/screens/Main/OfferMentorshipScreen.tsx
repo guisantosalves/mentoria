@@ -13,6 +13,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { Mentoria } from "../../types/types";
 import { API_URL, API_PORT } from "../../modules/info";
 import { mentoriaServ } from "../../modules/mentoria/service";
+import { useAuth } from "../../navigation/context/AuthContext";
 
 const url = `${API_URL}:${API_PORT}/mentorias`;
 
@@ -26,6 +27,7 @@ type OfferMentorshipScreenProps = {
 };
 
 const OfferMentorshipScreen: React.FC<OfferMentorshipScreenProps> = ({ navigation }) => {
+  const { token } = useAuth(); 
   const [nome, setNome] = useState("");
   const [localizacao, setLocalizacao] = useState("");
   const [descricao, setDescricao] = useState("");
@@ -40,8 +42,8 @@ const OfferMentorshipScreen: React.FC<OfferMentorshipScreenProps> = ({ navigatio
   
     const mentorshipData: Mentoria = {
       nome,
-      data_inicio: date.toISOString(), 
-      data_fim: date.toISOString(),    
+      data_inicio: '12/12/12', 
+      data_fim: '12/12/12',  
       descricao,
       localizacao,
       mentor: 1,
@@ -49,15 +51,17 @@ const OfferMentorshipScreen: React.FC<OfferMentorshipScreenProps> = ({ navigatio
       usuarios: [], 
     };
 
-    const token = "await AsyncStorage.getItem('token')";
 
     console.log("Enviando dados:", mentorshipData);
     try {
-      const response = await mentoriaServ.creatementoria(mentorshipData, token);
+      const response = await mentoriaServ.creatementoria(mentorshipData, token || "");
       if (response.success) {
+        console.log("Sucesso")
         Alert.alert("Sucesso", "Mentoria registrada com sucesso!");
+        navigation.navigate("MentorshipList");
         navigation.goBack();
       } else {
+        console.log("Erro")
         Alert.alert("Erro", "Houve um erro ao registrar a mentoria.");
       }
     } catch (error) {
