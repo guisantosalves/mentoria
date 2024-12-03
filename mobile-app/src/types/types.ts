@@ -105,6 +105,20 @@ export interface MentoriaDetails {
   avaliacoes: AvaliacaoResponse[];
 }
 
+export type UsuarioAndMentoria = {
+  id?: number;
+  nome: string;
+  cpf: string;
+  email: string;
+  foto: string;
+  rg: string;
+  senha: string;
+  cursoId: number;
+  tipo: number;
+  disciplinas: number[];
+  mentorias: Mentoria[];
+};
+
 export interface DisciplineWithMentoria extends Disciplina {
   mentorias: Mentoria[];
 }

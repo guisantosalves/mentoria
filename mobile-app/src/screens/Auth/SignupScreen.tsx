@@ -6,6 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   Alert,
+  SafeAreaView,
 } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { usuarioServ } from "../../modules/usuario/service";
@@ -62,7 +63,7 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Cadastro</Text>
 
       <Text style={styles.label}>Nome</Text>
@@ -104,7 +105,7 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
           Faça login
         </Text>
       </Text>
-    </View>
+    </SafeAreaView>
   );
 };
 

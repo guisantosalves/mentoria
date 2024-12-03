@@ -6,7 +6,7 @@ import SessionDetailsScreen from "../screens/Main/SessionDetails";
 
 type RootStackParamList = {
     SessionsScreen: undefined;
-    SessionDetailsScreen: { session: Session };
+    SessionDetailsScreen: { session: any };
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
