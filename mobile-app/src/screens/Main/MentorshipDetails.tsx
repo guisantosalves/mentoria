@@ -93,10 +93,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#263238",
     borderRadius: 20,
     alignItems: "center",
-<<<<<<< HEAD
-=======
-    marginTop: 20,
->>>>>>> fcc17cd (home screen)
   },
   editButtonText: {
     color: "#fff",
