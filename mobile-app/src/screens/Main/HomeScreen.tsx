@@ -26,13 +26,17 @@ interface HomeScreenProps {
 
 const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const [activeTab, setActiveTab] = useState<string>('Procurar');
+  const [searchQuery, setSearchQuery] = useState<string>('');  
 
   const handleTabPress = (tabName: string) => {
     setActiveTab(tabName);
   };
 
   const handleSearchPress = () => {
-    navigation.navigate('Search');
+    navigation.navigate('FilterResult', {
+      query: searchQuery,  
+      results: data,       
+    });
   };
 
   return (
@@ -47,7 +51,12 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 
         <View style={styles.search}>
           <View style={styles.searchContainer}>
-            <TextInput style={styles.searchInput} placeholderTextColor="#888" />
+            <TextInput
+              style={styles.searchInput}
+              placeholderTextColor="#888"
+              value={searchQuery} 
+              onChangeText={(text) => setSearchQuery(text)}  
+            />
             <TouchableOpacity onPress={handleSearchPress}>
               <Icon name="search-outline" size={20} color="#FFFFFF" style={styles.searchIcon} />
             </TouchableOpacity>
@@ -59,40 +68,41 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         </View>
       </View>
 
-        <View style={styles.secondaryHeader}>
-          <Text style={styles.sectionTitle}>Últimas acessadas</Text>
-        </View>
-        <FlatList
-          data={data.slice(-4)}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              style={styles.listItem}
-              onPress={() =>
-                navigation.navigate('SessionDetailsScreen', {
-                  session: {
-                    title: item.title,
-                    startTime: item.time.split(' às ')[0],
-                    endTime: item.time.split(' às ')[1],
-                    teacher: 'Nome do Mentor',
-                    description: 'Descrição detalhada da sessão',
-                  },
-                })
-              }
-            >
-              <Icon name="time-outline" size={20} color="#6C757D" />
-              <View style={styles.listItemContent}>
-                <Text style={styles.listItemSubtitle}>{item.date}</Text>
-                <Text style={styles.listItemTitle}>{item.title}</Text>
-                <Text style={styles.listItemSubtitle}>{item.time}</Text>
-              </View>
-              <Icon name="chevron-forward-outline" size={20} color="#6C757D" />
-            </TouchableOpacity>
-          )}
-        />
+      <View style={styles.secondaryHeader}>
+        <Text style={styles.sectionTitle}>Últimas acessadas</Text>
+      </View>
+      <FlatList
+        data={data.slice(-4)}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            style={styles.listItem}
+            onPress={() =>
+              navigation.navigate('SessionDetailsScreen', {
+                session: {
+                  title: item.title,
+                  startTime: item.time.split(' às ')[0],
+                  endTime: item.time.split(' às ')[1],
+                  teacher: 'Nome do Mentor',
+                  description: 'Descrição detalhada da sessão',
+                },
+              })
+            }
+          >
+            <Icon name="time-outline" size={20} color="#6C757D" />
+            <View style={styles.listItemContent}>
+              <Text style={styles.listItemSubtitle}>{item.date}</Text>
+              <Text style={styles.listItemTitle}>{item.title}</Text>
+              <Text style={styles.listItemSubtitle}>{item.time}</Text>
+            </View>
+            <Icon name="chevron-forward-outline" size={20} color="#6C757D" />
+          </TouchableOpacity>
+        )}
+      />
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {

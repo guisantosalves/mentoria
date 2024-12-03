@@ -75,8 +75,6 @@ const MentorshipListScreen: React.FC<MentorshipListScreenProps> = ({ navigation 
   );
 };
 
-// Estilos permanecem os mesmos
-
 
 const styles = StyleSheet.create({
   container: {

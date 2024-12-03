@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -10,12 +10,13 @@ import {
 import { Picker } from "@react-native-picker/picker";
 import DateTimeSelector from "../../components/DateTimeSelector";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { Mentoria } from "../../types/types";
+import { Disciplina, Mentoria } from "../../types/types";
 import { API_URL, API_PORT } from "../../modules/info";
 import { mentoriaServ } from "../../modules/mentoria/service";
 import { useAuth } from "../../navigation/context/AuthContext";
-import { parse } from 'date-fns';
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { disciplinaServ } from "../../modules/disciplina/service";
+import { parse } from "date-fns/parse";
 
 type RootStackParamList = {
   MentorshipList: undefined;
@@ -27,22 +28,36 @@ type OfferMentorshipScreenProps = {
   navigation: StackNavigationProp<RootStackParamList, "OfferMentorship">;
 };
 
-const OfferMentorshipScreen: React.FC<OfferMentorshipScreenProps> = ({ navigation }) => {
-  const { token } = useAuth(); 
+const OfferMentorshipScreen: React.FC<OfferMentorshipScreenProps> = ({
+  navigation,
+}) => {
+  const { token } = useAuth();
   const [nome, setNome] = useState("");
   const [localizacao, setLocalizacao] = useState("");
   const [descricao, setDescricao] = useState("");
-  const [selectedArea, setSelectedArea] = useState("");
-  const [date, setDate] = useState(new Date());
+  const [selectedArea, setSelectedArea] = useState<number>(-1);
+  const [dateInicio, setDateInicio] = useState(new Date());
+  const [dateFim, setDateFim] = useState(new Date());
+  const [discplinas, setDisciplinas] = useState<Disciplina[]>([]);
+
+  const gettingDisciplinas = useCallback(async () => {
+    const token = await AsyncStorage.getItem("@token");
+    const data = await disciplinaServ.getAllDisciplinas(token ?? "");
+    setDisciplinas(data);
+  }, []);
+
+  useEffect(() => {
+    gettingDisciplinas();
+  }, [gettingDisciplinas]);
 
   const handleRegister = async () => {
-    if (!nome || !localizacao || !descricao || !selectedArea) {
+    if (!nome || !localizacao || !descricao || !selectedArea || !dateInicio || !dateFim) {
       Alert.alert("Erro", "Preencha todos os campos.");
       return;
     }
-  
-    const dataInicioISO = parse("12/12/12", "dd/MM/yy", new Date()).toISOString();
-    const dataFimISO = parse("12/12/12", "dd/MM/yy", new Date()).toISOString();
+
+    const dataInicioISO = dateInicio.toISOString();
+    const dataFimISO = dateFim.toISOString();
 
     const mentorshipData: Mentoria = {
       nome,
@@ -51,21 +66,20 @@ const OfferMentorshipScreen: React.FC<OfferMentorshipScreenProps> = ({ navigatio
       descricao,
       localizacao,
       mentor: 1,
-      disciplinaId: 1, 
-      usuarios: [], 
+      disciplinaId: Number(selectedArea),
+      usuarios: [],
     };
 
-
-    console.log("Enviando dados:", mentorshipData);
     try {
-      const response = await mentoriaServ.creatementoria(mentorshipData, token || "");
-      if (response.success) {
-        console.log("Sucesso")
-        Alert.alert("Sucesso", "Mentoria registrada com sucesso!");
-        navigation.navigate("MentorshipList");
+      const response = await mentoriaServ.creatementoria(
+        mentorshipData,
+        token || ""
+      );
+      if (response) {
+        console.log("Sucesso");
         navigation.goBack();
       } else {
-        console.log("Erro")
+        console.log("Erro");
         Alert.alert("Erro", "Houve um erro ao registrar a mentoria.");
       }
     } catch (error) {
@@ -73,7 +87,6 @@ const OfferMentorshipScreen: React.FC<OfferMentorshipScreenProps> = ({ navigatio
       Alert.alert("Erro", "Algo deu errado. Tente novamente mais tarde.");
     }
   };
-  
 
   return (
     <View style={styles.container}>
@@ -104,17 +117,24 @@ const OfferMentorshipScreen: React.FC<OfferMentorshipScreenProps> = ({ navigatio
           onValueChange={(itemValue) => setSelectedArea(itemValue)}
           style={styles.picker}
         >
-          <Picker.Item label="Selecionar" value="" />
-          <Picker.Item label="Matemática" value="matematica" />
-          <Picker.Item label="Física" value="fisica" />
-          <Picker.Item label="Química" value="quimica" />
+          {discplinas.map((item, index) => {
+            return (
+              <Picker.Item key={index} label={item.nome} value={item.id} />
+            );
+          })}
         </Picker>
       </View>
 
-      <Text style={styles.fieldLabel}>Data e Hora</Text>
+      <Text style={styles.fieldLabel}>Data e Hora Início</Text>
       <DateTimeSelector
-        selectedDate={date}
-        onDateChange={(newDate) => setDate(newDate)}
+        selectedDate={dateInicio}
+        onDateChange={(newDate) => setDateInicio(newDate)}
+      />
+
+      <Text style={styles.fieldLabel}>Data e Hora Fim</Text>
+      <DateTimeSelector
+        selectedDate={dateFim}
+        onDateChange={(newDate) => setDateFim(newDate)}
       />
 
       <Text style={styles.fieldLabel}>Descrição da aula</Text>
@@ -130,12 +150,15 @@ const OfferMentorshipScreen: React.FC<OfferMentorshipScreenProps> = ({ navigatio
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={styles.backButton}
-          onPress={() => navigation.goBack()} 
+          onPress={() => navigation.goBack()}
         >
           <Text style={styles.backButtonText}>Cancelar</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.registerButton} onPress={handleRegister}>
+        <TouchableOpacity
+          style={styles.registerButton}
+          onPress={handleRegister}
+        >
           <Text style={styles.registerButtonText}>Registrar aula</Text>
         </TouchableOpacity>
       </View>
