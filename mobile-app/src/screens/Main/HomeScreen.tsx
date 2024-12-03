@@ -162,7 +162,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
                     endTime: new Date(item.data_fim).getDate().toString(),
                     teacher: allUsers.filter(
                       (currUser, index) => currUser.id === item.mentor
-                    )[0].nome,
+                    )[0]?.nome,
                     description: item.descricao,
                   },
                 })
@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#F5F5F5",
     paddingHorizontal: 20,
-    paddingBottom: 20
+    paddingBottom: 20,
   },
   header: {
     flexDirection: "row",
