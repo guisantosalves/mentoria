@@ -1,6 +1,6 @@
-import { Session } from "../screens/Main/SessionsScreen";
-
 type RootStackParamList = {
-    SessionsScreen: undefined;
-    SessionDetailsScreen: { session: Session };
-};
+    Home: undefined;
+    FilterResult: { query: string; results: any[] };
+    Search: undefined; 
+  };
+  

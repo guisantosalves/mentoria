@@ -32,7 +32,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   };
 
   const handleSearchPress = () => {
-    console.log('presionou');
     navigation.navigate('Search');
   };
 
