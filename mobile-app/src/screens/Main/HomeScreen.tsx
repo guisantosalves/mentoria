@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
   },
   search: {
     alignItems: 'center',
-    // padding: 20,
+    padding: 20,
   },
   searchContainer: {
     flexDirection: 'row',

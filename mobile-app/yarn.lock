@@ -2116,12 +2116,12 @@
   dependencies:
     nanoid "3.3.7"
 
-"@react-navigation/stack@^7.0.17":
-  version "7.0.17"
-  resolved "https://registry.npmjs.org/@react-navigation/stack/-/stack-7.0.17.tgz"
-  integrity sha512-izSCJQUXnO92XUUTpZkqV4ftpROKFqbGZi5nZdRNrSPMpHbpdUzB+6dnvXz+8Zwp5O0c6zK+gu9HmfLAa22Q1Q==
+"@react-navigation/stack@^7.0.18":
+  version "7.0.18"
+  resolved "https://registry.npmjs.org/@react-navigation/stack/-/stack-7.0.18.tgz"
+  integrity sha512-Y2Q/tgYaZIZE15ejoOFJ9vZLw8fV1x/huIP2L9qARRn427l+QACIU4TYGTBOK6PafqOlFdDmfLkDvdgjD/qwxQ==
   dependencies:
-    "@react-navigation/elements" "^2.2.3"
+    "@react-navigation/elements" "^2.2.4"
     color "^4.2.3"
 
 "@rnx-kit/chromium-edge-launcher@^1.0.0":

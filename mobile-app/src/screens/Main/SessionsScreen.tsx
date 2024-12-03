@@ -41,6 +41,7 @@ type RootStackParamList = {
 type SessionsScreenProps = {
     navigation: StackNavigationProp<RootStackParamList, "SessionsScreen">;
 };
+
 const SessionsScreen: React.FC<SessionsScreenProps> = ({ navigation }) => {
     const renderSession = ({ item }: { item: Session }) => (
         <TouchableOpacity

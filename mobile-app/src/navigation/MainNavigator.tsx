@@ -6,6 +6,7 @@ import HomeScreen from "../screens/Main/HomeScreen";
 import OfferMentorshipScreen from "../screens/Main/OfferMentorshipScreen";
 import HomeStack from "./HomeStack";
 import ChatScreen from "../screens/Main/ChatScreen";
+import MentorShipNavigator from "./MentorShipNavigator";
 
 const MainNavigator = () => {
   const [activeTab, setActiveTab] = useState<string>("Procurar");
@@ -19,7 +20,7 @@ const MainNavigator = () => {
       case "Procurar":
         return <HomeStack  />;
       case "Oferecer":
-        return <OfferMentorshipScreen />;
+        return <MentorShipNavigator />;
       case "Suas aulas":
         return <SessionNavigator />; 
       case "Mensagens":

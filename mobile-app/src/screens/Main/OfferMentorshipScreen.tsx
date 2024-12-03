@@ -5,11 +5,16 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  Alert,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
+import DateTimeSelector from '../../components/DateTimeSelector';
 
 const OfferMentorshipScreen = () => {
+  const [nome, setNome] = useState("");
+  const [localizacao, setLocalizacao] = useState("");
+  const [descricao, setDescricao] = useState("");
   const [selectedArea, setSelectedArea] = useState("");
   const [date, setDate] = useState(new Date());
   const [showPicker, setShowPicker] = useState(false);
@@ -21,27 +26,65 @@ const OfferMentorshipScreen = () => {
     setShowPicker(false);
   };
 
+  const handleRegister = async () => {
+    if (!nome || !localizacao || !descricao || !selectedArea) {
+      Alert.alert("Erro", "Preencha todos os campos.");
+      return;
+    }
+
+    const mentorshipData = {
+      nome,
+      localizacao,
+      descricao,
+      area: selectedArea,
+      data_inicio: date.toISOString(),
+    };
+
+    try {
+      const response = await fetch("https://seu-backend.com/mentorias", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(mentorshipData),
+      });
+
+      if (response.ok) {
+        Alert.alert("Sucesso", "Aula cadastrada com sucesso!");
+        setNome("");
+        setLocalizacao("");
+        setDescricao("");
+        setSelectedArea("");
+        setDate(new Date());
+      } else {
+        Alert.alert("Erro", "Não foi possível cadastrar a aula.");
+      }
+    } catch (error) {
+      Alert.alert("Erro", "Ocorreu um erro ao cadastrar a aula.");
+    }
+  };
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Cadastro</Text>
-
-      <TouchableOpacity style={styles.profilePicture}>
-        <Text style={styles.addPhotoText}>+</Text>
-      </TouchableOpacity>
-      <Text style={styles.label}>Foto de perfil</Text>
+      {/* Cabeçalho */}
+      <View style={styles.headerContainer}>
+        <Text style={styles.header}>Cadastro</Text>
+      </View>
 
       <Text style={styles.fieldLabel}>Nome</Text>
       <TextInput
         style={styles.input}
-        value="Beatriz S. Aquino"
-        editable={false}
+        value={nome}
+        onChangeText={setNome}
+        placeholder="Digite seu nome"
       />
 
       <Text style={styles.fieldLabel}>Localização</Text>
       <TextInput
         style={styles.input}
-        value="Bloco C. Sala 404"
-        editable={false}
+        value={localizacao}
+        onChangeText={setLocalizacao}
+        placeholder="Digite o local da aula"
       />
 
       <Text style={styles.fieldLabel}>Área de Especialização</Text>
@@ -59,32 +102,22 @@ const OfferMentorshipScreen = () => {
       </View>
 
       <Text style={styles.fieldLabel}>Data e Hora</Text>
-      <TouchableOpacity
-        style={styles.dateInput}
-        onPress={() => setShowPicker(true)}
-      >
-        <Text style={styles.dateText}>
-          {date.toLocaleDateString()} - {date.toLocaleTimeString().slice(0, 5)}Hs
-        </Text>
-      </TouchableOpacity>
-      {showPicker && (
-        <DateTimePicker
-          value={date}
-          mode="datetime"
-          display="default"
-          onChange={handleDateChange}
-        />
-      )}
+      <DateTimeSelector
+        selectedDate={date}
+        onDateChange={(newDate) => setDate(newDate)}
+      />
 
       <Text style={styles.fieldLabel}>Descrição da aula</Text>
       <TextInput
         style={styles.textArea}
+        value={descricao}
+        onChangeText={setDescricao}
         placeholder="Aula focada..."
         multiline
         numberOfLines={4}
       />
 
-      <TouchableOpacity style={styles.registerButton}>
+      <TouchableOpacity style={styles.registerButton} onPress={handleRegister}>
         <Text style={styles.registerButtonText}>Registrar aula</Text>
       </TouchableOpacity>
     </View>
@@ -96,6 +129,17 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     backgroundColor: "#fff",
+  },
+  headerContainer: {
+    backgroundColor: "#fff",
+    marginBottom: 20,
+    padding: 15,
+    elevation: 3, 
+  },
+  header: {
+    fontSize: 24,
+    fontWeight: "700",
+    color: "#263238",
   },
   title: {
     fontSize: 24,
