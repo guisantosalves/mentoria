@@ -73,8 +73,6 @@ const OfferMentorshipScreen: React.FC<OfferMentorshipScreenProps> = ({
       );
       if (response) {
         console.log("Sucesso");
-        Alert.alert("Sucesso", "Mentoria registrada com sucesso!");
-        navigation.navigate("MentorshipList");
         navigation.goBack();
       } else {
         console.log("Erro");
