@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, FlatList, StyleSheet, ActivityIndicator } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, Text, TouchableOpacity, FlatList, StyleSheet, SafeAreaView, ActivityIndicator } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { Mentoria } from "../../types/types";
 import { mentoriaServ } from "./../../modules/mentoria/service/index";
@@ -37,7 +37,7 @@ const MentorshipListScreen: React.FC<MentorshipListScreenProps> = ({ navigation 
   }, []);
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
         <Text style={styles.header}>Aulas Cadastradas</Text>
       </View>
@@ -71,7 +71,7 @@ const MentorshipListScreen: React.FC<MentorshipListScreenProps> = ({ navigation 
       >
         <Text style={styles.addButtonText}>+</Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 };
 

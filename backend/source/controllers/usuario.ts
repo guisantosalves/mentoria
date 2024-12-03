@@ -55,6 +55,30 @@ export class User {
       });
   }
 
+  getUserByIdWithMentoria(req: Request, res: Response, next: NextFunction) {
+    const idFromParam = req.params.id;
+    (async () => {
+      const data = await prisma.usuario.findFirst({
+        where: { id: Number(idFromParam) },
+        include: { mentorias: { include: { mentoria: true } } },
+      });
+      if (data != null) {
+        //@ts-ignore
+        delete data.senha;
+        res.status(200).json(data);
+        return;
+      }
+      res.status(200).json({ message: "there is no data" });
+    })()
+      .catch((e) => {
+        res.status(400).json({ message: "database error" });
+        throw e;
+      })
+      .finally(async () => {
+        await prisma.$disconnect();
+      });
+  }
+
   createUser(req: Request, res: Response, next: NextFunction) {
     const dataToInsert = req.body;
 

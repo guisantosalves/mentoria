@@ -45,9 +45,10 @@ const MentorshipDetailsScreen: React.FC<MentorshipDetailsScreenProps> = ({ route
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 1, 
     padding: 20,
     backgroundColor: "#fff",
+    justifyContent: "space-between", 
   },
   header: {
     flexDirection: "row",
@@ -79,12 +80,12 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   editButton: {
-    marginTop: 20,
     paddingVertical: 10,
     paddingHorizontal: 20,
     backgroundColor: "#263238",
     borderRadius: 20,
     alignItems: "center",
+    marginTop: 20, 
   },
   editButtonText: {
     color: "#fff",

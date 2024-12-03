@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, StyleSheet } from "react-native";
-import BottomNavigation from "../components/BottomNavigation"; 
-import SessionNavigator from "./SessionNavigator"; 
+import BottomNavigation from "../components/BottomNavigation";
+import SessionNavigator from "./SessionNavigator";
 import HomeScreen from "../screens/Main/HomeScreen";
 import OfferMentorshipScreen from "../screens/Main/OfferMentorshipScreen";
 import HomeStack from "./HomeStack";
@@ -18,18 +18,17 @@ const MainNavigator = () => {
   const renderScreen = () => {
     switch (activeTab) {
       case "Procurar":
-        return <HomeStack  />;
+        return <HomeStack />;
       case "Oferecer":
         return <MentorShipNavigator />;
       case "Suas aulas":
-        return <SessionNavigator />; 
+        return <SessionNavigator />;
       case "Mensagens":
-        return <ChatScreen />; 
+        return <ChatScreen />;
       default:
         return <HomeStack />;
     }
   };
-
 
   return (
     <View style={styles.container}>

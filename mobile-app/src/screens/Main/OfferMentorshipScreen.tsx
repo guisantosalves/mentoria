@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   StyleSheet,
   Alert,
+  SafeAreaView,
+  ScrollView,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import DateTimeSelector from "../../components/DateTimeSelector";
@@ -89,41 +91,47 @@ const OfferMentorshipScreen: React.FC<OfferMentorshipScreenProps> = ({
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.headerContainer}>
-        <Text style={styles.header}>Cadastro</Text>
-      </View>
+    <SafeAreaView style={styles.container}>
+      <ScrollView>
+        <View style={styles.headerContainer}>
+          <Text style={styles.header}>Cadastro</Text>
+        </View>
 
-      <Text style={styles.fieldLabel}>Nome</Text>
-      <TextInput
-        style={styles.input}
-        value={nome}
-        onChangeText={setNome}
-        placeholder="Digite seu nome"
-      />
+        <Text style={styles.fieldLabel}>Nome</Text>
+        <TextInput
+          style={styles.input}
+          value={nome}
+          onChangeText={setNome}
+          placeholder="Digite seu nome"
+        />
 
-      <Text style={styles.fieldLabel}>Localização</Text>
-      <TextInput
-        style={styles.input}
-        value={localizacao}
-        onChangeText={setLocalizacao}
-        placeholder="Digite o local da aula"
-      />
+        <Text style={styles.fieldLabel}>Localização</Text>
+        <TextInput
+          style={styles.input}
+          value={localizacao}
+          onChangeText={setLocalizacao}
+          placeholder="Digite o local da aula"
+        />
 
-      <Text style={styles.fieldLabel}>Área de Especialização</Text>
-      <View style={styles.pickerContainer}>
-        <Picker
-          selectedValue={selectedArea}
-          onValueChange={(itemValue) => setSelectedArea(itemValue)}
-          style={styles.picker}
-        >
-          {discplinas.map((item, index) => {
-            return (
-              <Picker.Item key={index} label={item.nome} value={item.id} />
-            );
-          })}
-        </Picker>
-      </View>
+        <Text style={styles.fieldLabel}>Área de Especialização</Text>
+        <View style={styles.pickerContainer}>
+          <Picker
+            selectedValue={selectedArea}
+            onValueChange={(itemValue) => setSelectedArea(itemValue)}
+            // style={styles.picker}
+            style={{ marginHorizontal: 20 }}
+          >
+            {discplinas.map((item, index) => {
+              return (
+                <Picker.Item
+                  key={index}
+                  label={item.nome}
+                  value={String(item.id)}
+                />
+              );
+            })}
+          </Picker>
+        </View>
 
       <Text style={styles.fieldLabel}>Data e Hora Início</Text>
       <DateTimeSelector
@@ -137,32 +145,33 @@ const OfferMentorshipScreen: React.FC<OfferMentorshipScreenProps> = ({
         onDateChange={(newDate) => setDateFim(newDate)}
       />
 
-      <Text style={styles.fieldLabel}>Descrição da aula</Text>
-      <TextInput
-        style={styles.textArea}
-        value={descricao}
-        onChangeText={setDescricao}
-        placeholder="Aula focada..."
-        multiline
-        numberOfLines={4}
-      />
+        <Text style={styles.fieldLabel}>Descrição da aula</Text>
+        <TextInput
+          style={styles.textArea}
+          value={descricao}
+          onChangeText={setDescricao}
+          placeholder="Aula focada..."
+          multiline
+          numberOfLines={4}
+        />
 
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => navigation.goBack()}
-        >
-          <Text style={styles.backButtonText}>Cancelar</Text>
-        </TouchableOpacity>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => navigation.goBack()}
+          >
+            <Text style={styles.backButtonText}>Cancelar</Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.registerButton}
-          onPress={handleRegister}
-        >
-          <Text style={styles.registerButtonText}>Registrar aula</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+          <TouchableOpacity
+            style={styles.registerButton}
+            onPress={handleRegister}
+          >
+            <Text style={styles.registerButtonText}>Registrar aula</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
