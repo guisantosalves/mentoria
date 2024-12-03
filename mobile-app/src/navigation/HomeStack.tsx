@@ -6,7 +6,9 @@ import FilterResultScreen from '../screens/Main/ResultsScreen';
 type RootStackParamList = {
   Home: undefined;
   FilterResult: { query: string; results: any[] };
+  Search: undefined; 
 };
+
 
 const Stack = createStackNavigator<RootStackParamList>();
 

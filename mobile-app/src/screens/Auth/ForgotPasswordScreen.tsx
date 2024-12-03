@@ -15,16 +15,13 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({ navigation 
     <View style={styles.container}>
       <Text style={styles.title}>Recuperar Senha</Text>
 
-      {/* Campo de Email */}
       <Text style={styles.label}>Email</Text>
       <TextInput style={styles.input} placeholder="Digite seu email" keyboardType="email-address" />
 
-      {/* Botão de Recuperação */}
       <TouchableOpacity style={styles.button}>
         <Text style={styles.buttonText}>Recuperar</Text>
       </TouchableOpacity>
 
-      {/* Link para Voltar ao Login */}
       <Text style={styles.footerText}>
         Lembrou a senha?{' '}
         <Text style={styles.linkText} onPress={() => navigation.navigate('Login')}>
@@ -45,15 +42,16 @@ const styles = StyleSheet.create({
     },
     title: {
       fontSize: 24,
-      fontWeight: 'bold',
-      color: '#333333',
-      marginBottom: 24,
+      fontWeight: '500',
+      color: '#263238',
+      marginBottom: 16,
     },
     label: {
-      fontSize: 14,
-      color: '#666666',
       alignSelf: 'flex-start',
-      marginBottom: 8,
+      color: "#5C6D73",
+      fontSize: 10,
+      fontWeight: "600",
+      marginBottom: 5,
     },
     input: {
       width: '100%',
@@ -66,10 +64,10 @@ const styles = StyleSheet.create({
       marginBottom: 16,
     },
     button: {
-      backgroundColor: '#333333',
+      backgroundColor: '#263238',
       paddingVertical: 12,
       paddingHorizontal: 32,
-      borderRadius: 8,
+      borderRadius: 10,
       alignItems: 'center',
       justifyContent: 'center',
       marginTop: 16,

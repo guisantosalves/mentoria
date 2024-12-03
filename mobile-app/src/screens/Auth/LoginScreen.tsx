@@ -15,20 +15,16 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
     <View style={styles.container}>
       <Text style={styles.title}>Login</Text>
 
-      {/* Campo de Nome */}
       <Text style={styles.label}>Nome</Text>
       <TextInput style={styles.input} placeholder="nome de usuario" />
 
-      {/* Campo de Senha */}
       <Text style={styles.label}>Senha</Text>
       <TextInput style={styles.input} placeholder="******" secureTextEntry />
 
-      {/* Botão de Acesso */}
       <TouchableOpacity style={styles.button}>
         <Text style={styles.buttonText}>Acessar</Text>
       </TouchableOpacity>
 
-      {/* Links de Cadastro e Recuperação */}
       <Text style={styles.footerText}>
         Esqueceu a senha?{' '}
         <Text
@@ -54,19 +50,20 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 24,
+    paddingHorizontal: 34,
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333333',
-    marginBottom: 24,
+    fontWeight: '500',
+    color: '#263238',
+    marginBottom: 16,
   },
   label: {
-    fontSize: 14,
-    color: '#666666',
     alignSelf: 'flex-start',
-    marginBottom: 8,
+    color: "#5C6D73",
+    fontSize: 10,
+    fontWeight: "600",
+    marginBottom: 5,
   },
   input: {
     width: '100%',
@@ -79,10 +76,10 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   button: {
-    backgroundColor: '#333333',
+    backgroundColor: '#263238',
     paddingVertical: 12,
     paddingHorizontal: 32,
-    borderRadius: 8,
+    borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 16,
@@ -100,7 +97,7 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   linkText: {
-    color: '#333333',
+    color: '#263238',
     fontWeight: 'bold',
   },
 });

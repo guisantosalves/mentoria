@@ -13,12 +13,12 @@ const Stack = createStackNavigator<RootStackParamList>();
 
 const SessionNavigator = () => {
     return (
-        <Stack.Navigator initialRouteName="SessionsScreen" screenOptions={{ headerShown: false }} >
+        <Stack.Navigator initialRouteName="SessionsScreen" >
             <Stack.Screen name="SessionsScreen" component={SessionsScreen} />
             <Stack.Screen
                 name="SessionDetailsScreen"
                 component={SessionDetailsScreen}
-                options={{ title: "Detalhes da Aula" }}
+                options={{ title: "Detalhes da Aula", headerShown: false }}
             />
         </Stack.Navigator>
     );

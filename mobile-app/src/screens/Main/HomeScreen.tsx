@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, FlatList, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { StackNavigationProp } from '@react-navigation/stack';
+import { DrawerNavigationProp } from '@react-navigation/drawer';
 
 interface ItemData {
   id: string;
@@ -14,9 +14,11 @@ const data: ItemData[] = [
   { id: '1', title: 'Desenvolvimento de aplicativos móveis', date: '28/10/2024', time: '14h às 15h' },
   { id: '2', title: 'Design Thinking para iniciantes', date: '29/10/2024', time: '10h às 11h' },
   { id: '3', title: 'Introdução ao React Native', date: '30/10/2024', time: '16h às 17h' },
+  { id: '4', title: 'Introdução ao React Native', date: '30/10/2024', time: '16h às 17h' },
+  { id: '5', title: 'Introdução ao React Native', date: '30/10/2024', time: '16h às 17h' },
 ];
 
-type HomeScreenNavigationProp = StackNavigationProp<any, 'Home'>;
+type HomeScreenNavigationProp = DrawerNavigationProp<any>;
 
 interface HomeScreenProps {
   navigation: HomeScreenNavigationProp;
@@ -30,7 +32,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   };
 
   const handleSearchPress = () => {
-    console.log("presionou")
+    console.log('presionou');
     navigation.navigate('Search');
   };
 
@@ -38,7 +40,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     <View style={styles.container}>
       <View style={styles.contentMain}>
         <View style={styles.header}>
-          <Icon name="menu" size={24} color="#FFFFFF" />
+          <Icon name="menu" size={24} color="#FFFFFF" onPress={() => navigation.openDrawer()} />
           <Text style={styles.headerTitle}>
             Encontre sua <Text style={styles.highlight}>Mentoria</Text>
           </Text>
@@ -46,10 +48,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 
         <View style={styles.search}>
           <View style={styles.searchContainer}>
-            <TextInput
-              style={styles.searchInput}
-              placeholderTextColor="#888"
-            />
+            <TextInput style={styles.searchInput} placeholderTextColor="#888" />
             <TouchableOpacity onPress={handleSearchPress}>
               <Icon name="search-outline" size={20} color="#FFFFFF" style={styles.searchIcon} />
             </TouchableOpacity>
@@ -57,10 +56,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         </View>
 
         <View style={styles.illustrationContainer}>
-          <Image
-            source={require('../../assets/images/computer.png')}
-            style={styles.illustration}
-          />
+          <Image source={require('../../assets/images/computer.png')} style={styles.illustration} />
         </View>
       </View>
 
@@ -68,10 +64,23 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         <Text style={styles.sectionTitle}>Últimas acessadas</Text>
       </View>
       <FlatList
-        data={data}
+        data={data.slice(-4)}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <TouchableOpacity style={styles.listItem}>
+          <TouchableOpacity
+            style={styles.listItem}
+            onPress={() =>
+              navigation.navigate('SessionDetailsScreen', {
+                session: {
+                  title: item.title,
+                  startTime: item.time.split(' às ')[0],
+                  endTime: item.time.split(' às ')[1],
+                  teacher: 'Nome do Mentor',
+                  description: 'Descrição detalhada da sessão',
+                },
+              })
+            }
+          >
             <Icon name="time-outline" size={20} color="#6C757D" />
             <View style={styles.listItemContent}>
               <Text style={styles.listItemSubtitle}>{item.date}</Text>
@@ -117,7 +126,6 @@ const styles = StyleSheet.create({
   search: {
     alignItems: 'center',
     padding: 20,
-    
   },
   searchContainer: {
     flexDirection: 'row',
@@ -127,7 +135,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     paddingHorizontal: 15,
     paddingVertical: 10,
-    width: 317
+    width: 317,
   },
   searchInput: {
     flex: 1,
