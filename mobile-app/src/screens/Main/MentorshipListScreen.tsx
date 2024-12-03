@@ -1,10 +1,14 @@
-import React, { useState } from "react";
-import { View, Text, TouchableOpacity, FlatList, StyleSheet } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, TouchableOpacity, FlatList, StyleSheet, ActivityIndicator } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { Mentoria } from "../../types/types";
+import { mentoriaServ } from "./../../modules/mentoria/service/index";
+import { useAuth } from "../../navigation/context/AuthContext";
 
 type RootStackParamList = {
   MentorshipList: undefined;
   OfferMentorship: undefined;
+  MentorshipDetails: { mentoria: Mentoria };
 };
 
 type MentorshipListScreenProps = {
@@ -12,33 +16,55 @@ type MentorshipListScreenProps = {
 };
 
 const MentorshipListScreen: React.FC<MentorshipListScreenProps> = ({ navigation }) => {
-  const [mentorships, setMentorships] = useState([]);
+  const { token } = useAuth();
+  const [mentorships, setMentorships] = useState<Mentoria[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
-  const mockData = [
-    { id: "1", name: "Matemática - Aula 1", date: "2024-12-03 10:00" },
-    { id: "2", name: "Física - Aula 2", date: "2024-12-05 14:00" },
-  ];
+  useEffect(() => {
+    const fetchMentorships = async () => {
+      try {
+        setLoading(true);
+        const data = await mentoriaServ.getAllmentorias(token || '');
+        setMentorships(data);
+      } catch (error) {
+        console.error("Erro ao buscar mentorias:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMentorships();
+  }, []);
 
   return (
     <View style={styles.container}>
-      {/* Cabeçalho */}
       <View style={styles.headerContainer}>
         <Text style={styles.header}>Aulas Cadastradas</Text>
       </View>
 
-      <FlatList
-        data={mockData}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <View style={styles.card}>
-            <Text style={styles.cardTitle}>{item.name}</Text>
-            <Text style={styles.cardDate}>Data: {item.date}</Text>
-          </View>
-        )}
-        ListEmptyComponent={<Text style={styles.emptyText}>Nenhuma aula cadastrada.</Text>}
-      />
-      
-      {/* Botão para adicionar aula */}
+      {loading ? (
+        <ActivityIndicator size="large" color="#263238" />
+      ) : (
+        <FlatList
+          data={mentorships}
+          keyExtractor={(item) => item.id?.toString() || ""}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              onPress={() => navigation.navigate("MentorshipDetails", { mentoria: item })}
+            >
+              <View style={styles.card}>
+                <Text style={styles.cardTitle}>{item.nome}</Text>
+                <Text style={styles.cardDate}>
+                  Data: {item.data_inicio} - {item.data_fim}
+                </Text>
+                <Text style={styles.cardDescription}>{item.descricao}</Text>
+              </View>
+            </TouchableOpacity>
+          )}
+          ListEmptyComponent={<Text style={styles.emptyText}>Nenhuma aula cadastrada.</Text>}
+        />
+      )}
+
       <TouchableOpacity
         style={styles.addButton}
         onPress={() => navigation.navigate("OfferMentorship")}
@@ -48,6 +74,9 @@ const MentorshipListScreen: React.FC<MentorshipListScreenProps> = ({ navigation 
     </View>
   );
 };
+
+// Estilos permanecem os mesmos
+
 
 const styles = StyleSheet.create({
   container: {
@@ -59,7 +88,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     marginBottom: 20,
     padding: 15,
-    elevation: 3, 
+    elevation: 3,
   },
   header: {
     fontSize: 24,
@@ -81,11 +110,16 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#666",
   },
+  cardDescription: {
+    fontSize: 14,
+    color: "#333",
+  },
   emptyText: {
     textAlign: "center",
     marginTop: 20,
     fontSize: 16,
-    color: "#666",
+    color: "#CECACA",
+    fontWeight: 'bold'
   },
   addButton: {
     position: "absolute",

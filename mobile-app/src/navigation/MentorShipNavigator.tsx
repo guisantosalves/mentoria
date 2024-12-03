@@ -2,6 +2,7 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import OfferMentorshipScreen from "../screens/Main/OfferMentorshipScreen";
 import MentorshipListScreen from "../screens/Main/MentorshipListScreen";
+import MentorshipDetailsScreen from "../screens/Main/MentorshipDetails";
 
 const Stack = createStackNavigator();
 
@@ -16,8 +17,9 @@ const MentorShipNavigator = () => {
       <Stack.Screen 
         name="OfferMentorship" 
         component={OfferMentorshipScreen} 
-        options={{ headerShown: false  }} 
+        options={{ headerShown: false }} 
       />
+
     </Stack.Navigator>
   );
 };

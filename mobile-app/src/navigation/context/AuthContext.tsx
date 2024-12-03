@@ -26,12 +26,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
   
   const initializeToken = async () => {
-    const savedToken = await AsyncStorage.getItem('@token');
-    if (savedToken) {
-      setToken(savedToken);
-      setIsAuthenticated(true);
+    try {
+      const savedToken = await AsyncStorage.getItem('@token');
+      if (savedToken) {
+        setToken(savedToken);
+        setIsAuthenticated(true);
+      }
+    } catch (error) {
+      console.error("Erro ao inicializar o token:", error);
     }
   };
+  
   
   React.useEffect(() => {
     initializeToken();

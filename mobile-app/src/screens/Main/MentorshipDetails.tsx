@@ -10,83 +10,77 @@ import {
 import { Picker } from "@react-native-picker/picker";
 import DateTimeSelector from "../../components/DateTimeSelector";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { RouteProp } from "@react-navigation/native";
 import { Mentoria } from "../../types/types";
-import { API_URL, API_PORT } from "../../modules/info";
 import { mentoriaServ } from "../../modules/mentoria/service";
 import { useAuth } from "../../navigation/context/AuthContext";
-import { parse } from 'date-fns';
-
 
 type RootStackParamList = {
-  MentorshipList: undefined;
-  OfferMentorship: undefined;
-  MentorshipDetails: { mentoria: Mentoria }; 
-};
-
-type OfferMentorshipScreenProps = {
-  navigation: StackNavigationProp<RootStackParamList, "OfferMentorship">;
-};
-
-const OfferMentorshipScreen: React.FC<OfferMentorshipScreenProps> = ({ navigation }) => {
-  const { token } = useAuth(); 
-  const [nome, setNome] = useState("");
-  const [localizacao, setLocalizacao] = useState("");
-  const [descricao, setDescricao] = useState("");
-  const [selectedArea, setSelectedArea] = useState("");
-  const [date, setDate] = useState(new Date());
-
-  const handleRegister = async () => {
-    if (!nome || !localizacao || !descricao || !selectedArea) {
-      Alert.alert("Erro", "Preencha todos os campos.");
-      return;
-    }
+    MentorshipList: undefined;
+    OfferMentorship: undefined;
+    MentorshipDetails: { mentoria: Mentoria };
+  };
   
-    const dataInicioISO = parse("12/12/12", "dd/MM/yy", new Date()).toISOString();
-    const dataFimISO = parse("12/12/12", "dd/MM/yy", new Date()).toISOString();
-
-    const mentorshipData: Mentoria = {
-      nome,
-      data_fim: dataFimISO,
-      data_inicio: dataInicioISO,
-      descricao,
-      localizacao,
-      mentor: 1,
-      disciplinaId: 1, 
-      usuarios: [], 
-    };
-
-
-    console.log("Enviando dados:", mentorshipData);
-    try {
-      const response = await mentoriaServ.creatementoria(mentorshipData, token || "");
-      if (response.success) {
-        console.log("Sucesso")
-        Alert.alert("Sucesso", "Mentoria registrada com sucesso!");
-        navigation.navigate("MentorshipList");
-        navigation.goBack();
-      } else {
-        console.log("Erro")
-        Alert.alert("Erro", "Houve um erro ao registrar a mentoria.");
-      }
-    } catch (error) {
-      console.error("Erro ao criar a mentoria:", error);
-      Alert.alert("Erro", "Algo deu errado. Tente novamente mais tarde.");
-    }
+  type MentorshipEditScreenProps = {
+    route: { params: { mentoria: Mentoria } };
+    navigation: StackNavigationProp<RootStackParamList, "MentorshipDetails">;
   };
   
 
+const MentorshipEditScreen: React.FC<MentorshipEditScreenProps> = ({
+  route,
+  navigation,
+}) => {
+  const { mentoria } = route.params;
+  const { token } = useAuth();
+
+  const [nome, setNome] = useState(mentoria.nome);
+  const [localizacao, setLocalizacao] = useState(mentoria.localizacao);
+  const [descricao, setDescricao] = useState(mentoria.descricao);
+  const [selectedArea, setSelectedArea] = useState(""); // Ajuste se a área for parte dos dados
+  const [date, setDate] = useState(new Date(mentoria.data_inicio));
+
+  const handleSave = async () => {
+    if (!nome || !localizacao || !descricao) {
+      Alert.alert("Erro", "Preencha todos os campos obrigatórios.");
+      return;
+    }
+
+    const updatedMentoria: Mentoria = {
+      ...mentoria,
+      nome,
+      localizacao,
+      descricao,
+      data_inicio: date.toISOString(),
+      data_fim: new Date(date.getTime() + 2 * 60 * 60 * 1000).toISOString(), 
+    };
+
+    // try {
+    //   const response = await mentoriaServ.updatementoria(
+    //     mentoria.id,
+    //     updatedMentoria,
+    //     token || ""
+    //   );
+    //   if (response.success) {
+    //     Alert.alert("Sucesso", "Mentoria atualizada com sucesso!");
+    //     navigation.goBack();
+    //   } else {
+    //     Alert.alert("Erro", "Não foi possível salvar as alterações.");
+    //   }
+    // } catch (error) {
+    //   console.error("Erro ao atualizar mentoria:", error);
+    //   Alert.alert("Erro", "Ocorreu um erro. Tente novamente.");
+    // }
+  };
+
   return (
     <View style={styles.container}>
-      <View style={styles.headerContainer}>
-        <Text style={styles.header}>Cadastro</Text>
-      </View>
-
       <Text style={styles.fieldLabel}>Nome</Text>
       <TextInput
         style={styles.input}
         value={nome}
         onChangeText={setNome}
-        placeholder="Digite seu nome"
+        placeholder="Nome da mentoria"
       />
 
       <Text style={styles.fieldLabel}>Localização</Text>
@@ -94,7 +88,7 @@ const OfferMentorshipScreen: React.FC<OfferMentorshipScreenProps> = ({ navigatio
         style={styles.input}
         value={localizacao}
         onChangeText={setLocalizacao}
-        placeholder="Digite o local da aula"
+        placeholder="Local da mentoria"
       />
 
       <Text style={styles.fieldLabel}>Área de Especialização</Text>
@@ -112,17 +106,14 @@ const OfferMentorshipScreen: React.FC<OfferMentorshipScreenProps> = ({ navigatio
       </View>
 
       <Text style={styles.fieldLabel}>Data e Hora</Text>
-      <DateTimeSelector
-        selectedDate={date}
-        onDateChange={(newDate) => setDate(newDate)}
-      />
+      <DateTimeSelector selectedDate={date} onDateChange={setDate} />
 
-      <Text style={styles.fieldLabel}>Descrição da aula</Text>
+      <Text style={styles.fieldLabel}>Descrição</Text>
       <TextInput
         style={styles.textArea}
         value={descricao}
         onChangeText={setDescricao}
-        placeholder="Aula focada..."
+        placeholder="Descrição da mentoria"
         multiline
         numberOfLines={4}
       />
@@ -130,13 +121,13 @@ const OfferMentorshipScreen: React.FC<OfferMentorshipScreenProps> = ({ navigatio
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={styles.backButton}
-          onPress={() => navigation.goBack()} 
+          onPress={() => navigation.goBack()}
         >
           <Text style={styles.backButtonText}>Cancelar</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.registerButton} onPress={handleRegister}>
-          <Text style={styles.registerButtonText}>Registrar aula</Text>
+        <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+          <Text style={styles.saveButtonText}>Salvar</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -148,17 +139,6 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     backgroundColor: "#fff",
-  },
-  headerContainer: {
-    backgroundColor: "#fff",
-    marginBottom: 20,
-    padding: 15,
-    elevation: 3,
-  },
-  header: {
-    fontSize: 24,
-    fontWeight: "700",
-    color: "#263238",
   },
   fieldLabel: {
     color: "#5C6D73",
@@ -180,20 +160,11 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginBottom: 15,
     backgroundColor: "#D9D9D966",
-    color: "#5C6D73",
-    fontWeight: "600",
-    fontSize: 12,
     overflow: "hidden",
-    borderWidth: 0,
   },
   picker: {
     height: 50,
     width: "100%",
-    backgroundColor: "#D9D9D966",
-    color: "#5C6D73",
-    fontWeight: "600",
-    fontSize: 12,
-    borderWidth: 0,
   },
   textArea: {
     height: 100,
@@ -226,7 +197,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "600",
   },
-  registerButton: {
+  saveButton: {
     height: 45,
     flex: 1,
     marginLeft: 10,
@@ -235,11 +206,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  registerButtonText: {
+  saveButtonText: {
     color: "#fff",
     fontSize: 14,
     fontWeight: "600",
   },
 });
 
-export default OfferMentorshipScreen;
+export default MentorshipEditScreen;
