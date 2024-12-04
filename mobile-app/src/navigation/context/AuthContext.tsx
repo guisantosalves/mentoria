@@ -1,10 +1,10 @@
-import React, { createContext, useState, useContext, ReactNode } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { createContext, useState, useContext, ReactNode } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 interface AuthContextProps {
   isAuthenticated: boolean;
-  login: (token: string) => void; 
+  login: (token: string) => void;
   logout: () => void;
-  token: string | null; 
+  token: string | null;
 }
 
 export const AuthContext = createContext<AuthContextProps | null>(null);
@@ -16,18 +16,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const login = async (newToken: string) => {
     setIsAuthenticated(true);
     setToken(newToken);
-    await AsyncStorage.setItem('@token', newToken); 
+    await AsyncStorage.setItem("@token", newToken);
   };
-  
+
   const logout = async () => {
     setIsAuthenticated(false);
     setToken(null);
-    await AsyncStorage.removeItem('@token'); 
+    await AsyncStorage.removeItem("@token");
   };
-  
+
   const initializeToken = async () => {
     try {
-      const savedToken = await AsyncStorage.getItem('@token');
+      const savedToken = await AsyncStorage.getItem("@token");
       if (savedToken) {
         setToken(savedToken);
         setIsAuthenticated(true);
@@ -36,8 +36,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       console.error("Erro ao inicializar o token:", error);
     }
   };
-  
-  
+
   React.useEffect(() => {
     initializeToken();
   }, []);
@@ -52,7 +51,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 };

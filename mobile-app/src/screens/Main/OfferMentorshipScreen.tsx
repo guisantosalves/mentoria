@@ -23,7 +23,7 @@ import { parse } from "date-fns/parse";
 type RootStackParamList = {
   MentorshipList: undefined;
   OfferMentorship: undefined;
-  MentorshipDetails: { mentoria: Mentoria }; 
+  MentorshipDetails: { mentoria: Mentoria };
 };
 
 type OfferMentorshipScreenProps = {
@@ -55,7 +55,14 @@ const OfferMentorshipScreen: React.FC<OfferMentorshipScreenProps> = ({
   }, [gettingDisciplinas]);
 
   const handleRegister = async () => {
-    if (!nome || !localizacao || !descricao || !selectedArea || !dateInicio || !dateFim) {
+    if (
+      !nome ||
+      !localizacao ||
+      !descricao ||
+      !selectedArea ||
+      !dateInicio ||
+      !dateFim
+    ) {
       Alert.alert("Erro", "Preencha todos os campos.");
       return;
     }
@@ -93,93 +100,95 @@ const OfferMentorshipScreen: React.FC<OfferMentorshipScreenProps> = ({
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView>
       <ScrollView>
-        <View style={styles.headerContainer}>
-          <Text style={styles.header}>Cadastro</Text>
-        </View>
+        <View style={styles.container}>
+          <View style={styles.headerContainer}>
+            <Text style={styles.header}>Cadastro</Text>
+          </View>
 
-        <Text style={styles.fieldLabel}>Nome</Text>
-        <TextInput
-          style={styles.input}
-          value={nome}
-          onChangeText={setNome}
-          placeholder="Digite seu nome"
-        />
+          <Text style={styles.fieldLabel}>Nome</Text>
+          <TextInput
+            style={styles.input}
+            value={nome}
+            onChangeText={setNome}
+            placeholder="Digite seu nome"
+          />
 
-        <Text style={styles.fieldLabel}>Localização</Text>
-        <TextInput
-          style={styles.input}
-          value={localizacao}
-          onChangeText={setLocalizacao}
-          placeholder="Digite o local da aula"
-        />
+          <Text style={styles.fieldLabel}>Localização</Text>
+          <TextInput
+            style={styles.input}
+            value={localizacao}
+            onChangeText={setLocalizacao}
+            placeholder="Digite o local da aula"
+          />
 
-        <Text style={styles.fieldLabel}>Área de Especialização</Text>
-        <View style={styles.pickerContainer}>
-          <Picker
-            selectedValue={selectedArea}
-            onValueChange={(itemValue) => setSelectedArea(itemValue)}
-            // style={styles.picker}
-            style={{ marginHorizontal: 20 }}
-          >
-            {discplinas.map((item, index) => {
-              return (
-                <Picker.Item
-                  key={index}
-                  label={item.nome}
-                  value={String(item.id)}
-                />
-              );
-            })}
-          </Picker>
-        </View>
+          <Text style={styles.fieldLabel}>Área de Especialização</Text>
+          <View style={styles.pickerContainer}>
+            <Picker
+              selectedValue={selectedArea}
+              onValueChange={(itemValue) => setSelectedArea(itemValue)}
+              // style={styles.picker}
+              style={{ marginHorizontal: 20 }}
+            >
+              {discplinas.map((item, index) => {
+                return (
+                  <Picker.Item
+                    key={index}
+                    label={item.nome}
+                    value={String(item.id)}
+                  />
+                );
+              })}
+            </Picker>
+          </View>
 
-      <Text style={styles.fieldLabel}>Data e Hora Início</Text>
-      <DateTimeSelector
-        selectedDate={dateInicio}
-        onDateChange={(newDate) => setDateInicio(newDate)}
-      />
-
-      <Text style={styles.fieldLabel}>Data e Hora Fim</Text>
-      <DateTimeSelector
-        selectedDate={dateFim}
-        onDateChange={(newDate) => setDateFim(newDate)}
-      />
-        <Text style={styles.fieldLabel}>Data e Hora</Text>
+          {/* <Text style={styles.fieldLabel}>Data e Hora Início</Text>
         <DateTimeSelector
-          selectedDate={initialDate}
-          onDateChange={(newDate) => setInitialDate(newDate)}
+          selectedDate={dateInicio}
+          onDateChange={(newDate) => setDateInicio(newDate)}
         />
+
+        <Text style={styles.fieldLabel}>Data e Hora Fim</Text>
         <DateTimeSelector
-          selectedDate={finalDate}
-          onDateChange={(newDate) => setFinalDate(newDate)}
-        />
+          selectedDate={dateFim}
+          onDateChange={(newDate) => setDateFim(newDate)}
+        /> */}
+          <Text style={styles.fieldLabel}>Data e Hora</Text>
+          <DateTimeSelector
+            selectedDate={initialDate}
+            onDateChange={(newDate) => setInitialDate(newDate)}
+          />
+          <DateTimeSelector
+            selectedDate={finalDate}
+            onDateChange={(newDate) => setFinalDate(newDate)}
+          />
 
-        <Text style={styles.fieldLabel}>Descrição da aula</Text>
-        <TextInput
-          style={styles.textArea}
-          value={descricao}
-          onChangeText={setDescricao}
-          placeholder="Aula focada..."
-          multiline
-          numberOfLines={4}
-        />
+          <Text style={styles.fieldLabel}>Descrição da aula</Text>
+          <TextInput
+            style={styles.textArea}
+            value={descricao}
+            onChangeText={setDescricao}
+            placeholder="Aula focada..."
+            multiline
+            numberOfLines={4}
+          />
 
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            style={styles.backButton}
-            onPress={() => navigation.goBack()}
-          >
-            <Text style={styles.backButtonText}>Cancelar</Text>
-          </TouchableOpacity>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={styles.backButton}
+              onPress={() => navigation.goBack()}
+            >
+              <Text style={styles.backButtonText}>Cancelar</Text>
+            </TouchableOpacity>
 
-          <TouchableOpacity
-            style={styles.registerButton}
-            onPress={handleRegister}
-          >
-            <Text style={styles.registerButtonText}>Registrar aula</Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.registerButton}
+              onPress={handleRegister}
+            >
+              <Text style={styles.registerButtonText}>Registrar aula</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -190,8 +199,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    paddingHorizontal: 25, 
-    paddingTop: 20, 
+    paddingHorizontal: 25,
+    paddingTop: 20,
     paddingBottom: 20,
   },
   headerContainer: {
@@ -207,19 +216,19 @@ const styles = StyleSheet.create({
   },
   fieldLabel: {
     color: "#5C6D73",
-    fontSize: 12, 
+    fontSize: 12,
     fontWeight: "600",
     marginBottom: 5,
   },
   input: {
     height: 50,
     borderRadius: 20,
-    paddingHorizontal: 15, 
+    paddingHorizontal: 15,
     marginBottom: 20,
     backgroundColor: "#D9D9D966",
     color: "#5C6D73",
     fontWeight: "600",
-    fontSize: 14, 
+    fontSize: 14,
   },
   pickerContainer: {
     borderRadius: 20,
@@ -241,16 +250,16 @@ const styles = StyleSheet.create({
     borderWidth: 0,
   },
   textArea: {
-    height: 120, 
+    height: 120,
     borderRadius: 20,
-    paddingHorizontal: 15, 
-    paddingVertical: 15, 
+    paddingHorizontal: 15,
+    paddingVertical: 15,
     backgroundColor: "#D9D9D966",
     textAlignVertical: "top",
-    marginBottom: 20, 
+    marginBottom: 20,
     color: "#5C6D73",
     fontWeight: "600",
-    fontSize: 14, 
+    fontSize: 14,
   },
   buttonContainer: {
     flexDirection: "row",
@@ -286,6 +295,5 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
 });
-
 
 export default OfferMentorshipScreen;

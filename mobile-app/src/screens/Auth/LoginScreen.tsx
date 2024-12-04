@@ -59,6 +59,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
         placeholder="Digite seu email"
         value={email}
         onChangeText={setEmail}
+        autoCapitalize="none"
       />
 
       <Text style={styles.label}>Senha</Text>
@@ -68,6 +69,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
         secureTextEntry
         value={senha}
         onChangeText={setSenha}
+        autoCapitalize="none"
       />
 
       <TouchableOpacity style={styles.button} onPress={handleLogin}>

@@ -128,6 +128,7 @@ export class Mentoria {
     const dataToUpdate = req.body;
     const idFromParam = req.params.id;
 
+    console.log(dataToUpdate);
     (async () => {
       const isMentoriaExist = await prisma.mentoria.findFirst({
         where: { id: Number(idFromParam) },

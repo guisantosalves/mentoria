@@ -63,7 +63,7 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <Text style={styles.title}>Cadastro</Text>
 
       <Text style={styles.label}>Nome</Text>
@@ -81,6 +81,7 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
         keyboardType="email-address"
         value={email}
         onChangeText={setEmail}
+        autoCapitalize="none"
       />
 
       <Text style={styles.label}>Senha</Text>
@@ -90,6 +91,7 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
         secureTextEntry
         value={senha}
         onChangeText={setSenha}
+        autoCapitalize="none"
       />
 
       <TouchableOpacity style={styles.button} onPress={createUser}>
@@ -105,7 +107,7 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
           Faça login
         </Text>
       </Text>
-    </SafeAreaView>
+    </View>
   );
 };
 

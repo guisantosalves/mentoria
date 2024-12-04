@@ -1,5 +1,12 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, SafeAreaView } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+  SafeAreaView,
+} from "react-native";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { Mentoria } from "../../types/types";
@@ -22,24 +29,32 @@ const MentorshipDetailsScreen: React.FC<MentorshipDetailsScreenProps> = ({
   const { mentoria } = route.params;
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-            <Icon name="arrow-back" size={24} color="#263238" />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Detalhes da Mentoria</Text>
+        <View>
+          <View style={styles.header}>
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={styles.backButton}
+            >
+              <Icon name="arrow-back" size={24} color="#263238" />
+            </TouchableOpacity>
+            <Text style={styles.headerTitle}>Detalhes da Mentoria</Text>
+          </View>
+
+          <Text style={styles.title}>{mentoria.nome}</Text>
+          <Text style={styles.date}>
+            Data: {mentoria.data_inicio} - {mentoria.data_fim}
+          </Text>
+          <Text style={styles.description}>{mentoria.descricao}</Text>
         </View>
-
-        <Text style={styles.title}>{mentoria.nome}</Text>
-        <Text style={styles.date}>
-          Data: {mentoria.data_inicio} - {mentoria.data_fim}
-        </Text>
-        <Text style={styles.description}>{mentoria.descricao}</Text>
-
-        <TouchableOpacity 
-          style={styles.editButton} 
-          onPress={() => navigation.navigate("EditMentorshipScreen", { mentoria: mentoria })}
+        <TouchableOpacity
+          style={styles.editButton}
+          onPress={() =>
+            navigation.navigate("EditMentorshipScreen", {
+              mentoria: mentoria,
+            })
+          }
         >
           <Text style={styles.editButtonText}>Editar</Text>
         </TouchableOpacity>
@@ -54,8 +69,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   scrollContainer: {
+    flexGrow: 1,
     padding: 20,
-    paddingBottom: 30,  
+    paddingBottom: 30,
+    justifyContent: "space-around",
   },
   header: {
     flexDirection: "row",
@@ -85,7 +102,7 @@ const styles = StyleSheet.create({
   description: {
     fontSize: 16,
     color: "#333",
-    marginBottom: 20,  
+    marginBottom: 20,
   },
   editButton: {
     paddingVertical: 10,
