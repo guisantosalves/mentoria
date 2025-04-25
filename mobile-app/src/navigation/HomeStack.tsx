@@ -16,7 +16,7 @@ const HomeStack = () => {
   return (
     <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Home" component={HomeScreen} />
-      <Stack.Screen name="FilterResult" component={FilterResultScreen} />
+      <Stack.Screen name="FilterResult" component={FilterResultScreen} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 };

@@ -20,7 +20,9 @@ router.get("/usuario", auth, UserController.getUser);
 router.get("/usuario/:id", auth, UserController.getUserById);
 router.get("/usuario/:id/mentoria", auth, UserController.getUserByIdWithMentoria);
 // create user does not need auth
-router.post("/usuario", UserController.createUser);
+router.post("/usuario", (req, res, next) => {
+  UserController.createUser(req, res, next);
+});
 router.put("/usuario/:id", auth, UserController.updateUser);
 router.delete("/usuario/:id", auth, UserController.deleteUser);
 

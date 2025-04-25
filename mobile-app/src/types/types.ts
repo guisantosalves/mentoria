@@ -7,18 +7,18 @@ export interface Login {
 
 // TIPO -> 0 - ALUNO / 1 - MENTOR / 2 - ADMIN
 export interface Usuario {
-  id?: number;
   nome: string;
-  cpf: string;
   email: string;
-  foto: string;
-  rg: string;
   senha: string;
+  cpf: string;
+  rg: string;
+  foto?: string;
   cursoId: number;
   tipo: number;
   disciplinas: number[];
   mentorias: number[];
 }
+
 
 export interface Departamento {
   id?: number;

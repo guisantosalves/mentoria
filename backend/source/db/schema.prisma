@@ -21,14 +21,14 @@ model Usuario {
   email       String
   senha       String
   tipo        Int                   @default(0)
-  foto        String
-  RG          String
-  CPF         String
+  foto        String?
+  RG          String?
+  CPF         String?
   createdAt   DateTime              @default(now())
   updatedAt   DateTime              @updatedAt
   mentorias   Usuario_Mentoria[]
-  curso       Curso                 @relation(fields: [cursoId], references: [id])
-  cursoId     Int
+  curso       Curso?                @relation(fields: [cursoId], references: [id])
+  cursoId     Int?
   disciplinas Usuario_Disciplinas[]
 }
 

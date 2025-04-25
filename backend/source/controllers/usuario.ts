@@ -79,66 +79,84 @@ export class User {
       });
   }
 
-  createUser(req: Request, res: Response, next: NextFunction) {
-    const dataToInsert = req.body;
-
-    // TIPO -> 0 - ALUNO / 1 - MENTOR / 2 - ADMIN
-    (async () => {
-      const hashedPassword = await bcrypt.hash(dataToInsert.senha, 10);
-
-      const data = await prisma.usuario.create({
-        data: {
-          nome: dataToInsert.nome,
-          CPF: dataToInsert.cpf,
-          email: dataToInsert.email,
-          foto: dataToInsert.foto,
-          RG: dataToInsert.rg,
-          senha: hashedPassword,
-          curso: {
-            connect: {
-              id: dataToInsert.cursoId,
-            },
-          },
-          tipo: dataToInsert.tipo,
-          disciplinas: {
-            createMany: {
-              data: [
-                ...(dataToInsert.disciplinas
-                  ? dataToInsert.disciplinas.map((item: any) => ({
-                      disciplinaId: item,
-                    }))
-                  : []),
-              ],
-            },
-          },
-          mentorias: {
-            createMany: {
-              data: [
-                ...(dataToInsert.mentorias
-                  ? dataToInsert.mentorias.map((item: any) => ({
-                      mentoriaId: item,
-                    }))
-                  : []),
-              ],
-            },
-          },
-        },
-      });
-      if (data) {
-        res.status(200).json({ message: "Data inserted successfully" });
-      } else {
-        res.status(400).json({ message: "error inserting data" });
+  async createUser(req: Request, res: Response, next: NextFunction) {
+    const {
+      nome,
+      email,
+      senha,
+      cpf,
+      rg,
+      foto,
+      cursoId,
+      tipo,
+      disciplinas = [],
+      mentorias = [],
+    } = req.body;
+  
+    if (!nome || !email || !senha) {
+      return res
+        .status(400)
+        .json({ message: "Nome, email e senha são obrigatórios!" });
+    }
+  
+    try {
+      const hashedPassword = await bcrypt.hash(senha, 10);
+  
+      const userData: any = {
+        nome,
+        email,
+        senha: hashedPassword,
+        CPF: cpf || undefined,
+        RG: rg || undefined,
+        foto: foto || undefined,
+        tipo: tipo ?? undefined,
+      };
+  
+      if (cursoId) {
+        userData.curso = {
+          connect: { id: cursoId },
+        };
       }
-    })()
-      .catch((e) => {
-        res.status(400).json({ message: "database error" });
-        throw e;
-      })
-      .finally(async () => {
-        await prisma.$disconnect();
+  
+      if (disciplinas.length > 0) {
+        userData.disciplinas = {
+          createMany: {
+            data: disciplinas.map((disciplinaId: number) => ({
+              disciplinaId,
+            })),
+          },
+        };
+      }
+  
+      if (mentorias.length > 0) {
+        userData.mentorias = {
+          createMany: {
+            data: mentorias.map((mentoriaId: number) => ({
+              mentoriaId,
+            })),
+          },
+        };
+      }
+  
+      const data = await prisma.usuario.create({
+        data: userData,
       });
+  
+      return res.status(200).json({
+        message: "Usuário criado com sucesso!",
+        data,
+      });
+    } catch (e) {
+      console.error("Erro no createUser:", e);
+      return res.status(500).json({
+        message: "Erro interno ao criar usuário",
+        error: e instanceof Error ? e.message : "Erro desconhecido",
+      });
+    } finally {
+      await prisma.$disconnect();
+    }
   }
-
+  
   updateUser(req: Request, res: Response, next: NextFunction) {
     const dataToUpdate = req.body;
     const idFromParam = req.params.id;
