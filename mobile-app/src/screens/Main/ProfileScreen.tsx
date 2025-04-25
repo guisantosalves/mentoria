@@ -9,14 +9,17 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
+import { useAuth } from "../../navigation/context/AuthContext";
 
 interface ProfileScreenProps {
   navigation: DrawerNavigationProp<any>;
 }
 
 const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
+  const { logout } = useAuth();
+
   const handleLogout = () => {
-    console.log("Usuário deslogado");
+    logout();
   };
 
   return (
@@ -40,7 +43,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
 
         <View style={styles.infoContainer}>
           <Text style={styles.infoLabel}>E-mail:</Text>
-          <Text style={styles.infoText}>joao.silva@gmail.com</Text>
+          <Text style={styles.infoText}>admin@gmail.com</Text>
         </View>
 
         <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>

@@ -60,7 +60,7 @@ VALUES
     ),
     (3, 'Design Gráfico', 1, 2, false, 'Campus Norte'),
     (4, 'Medicina', 1, 2, true, 'Campus Leste'),
-    (5, 'Direito', 1, 2 ƒ, false, 'Campus Oeste');
+    (5, 'Direito', 1, 2, false, 'Campus Oeste');
 
 INSERT INTO
     public."Disciplina" (

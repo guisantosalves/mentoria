@@ -1,9 +1,19 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, FlatList, StyleSheet, SafeAreaView, ActivityIndicator } from "react-native";
+import React, { useCallback, useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  FlatList,
+  StyleSheet,
+  ActivityIndicator,
+  RefreshControl,
+  ScrollView,
+} from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { Mentoria } from "../../types/types";
 import { mentoriaServ } from "./../../modules/mentoria/service/index";
 import { useAuth } from "../../navigation/context/AuthContext";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 type RootStackParamList = {
   MentorshipList: undefined;
@@ -15,66 +25,87 @@ type MentorshipListScreenProps = {
   navigation: StackNavigationProp<RootStackParamList, "MentorshipList">;
 };
 
-const MentorshipListScreen: React.FC<MentorshipListScreenProps> = ({ navigation }) => {
+const MentorshipListScreen: React.FC<MentorshipListScreenProps> = ({
+  navigation,
+}) => {
   const { token } = useAuth();
   const [mentorships, setMentorships] = useState<Mentoria[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const fetchMentorships = useCallback(async () => {
+    try {
+      setLoading(true);
+      const data = await mentoriaServ.getAllmentorias(token || "");
+      setMentorships(data);
+    } catch (error) {
+      console.error("Erro ao buscar mentorias:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    const fetchMentorships = async () => {
-      try {
-        setLoading(true);
-        const data = await mentoriaServ.getAllmentorias(token || '');
-        setMentorships(data);
-      } catch (error) {
-        console.error("Erro ao buscar mentorias:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchMentorships();
+  }, [fetchMentorships]);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    fetchMentorships();
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
   }, []);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.headerContainer}>
-        <Text style={styles.header}>Aulas Cadastradas</Text>
-      </View>
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.headerContainer}>
+          <Text style={styles.header}>Aulas Cadastradas</Text>
+        </View>
 
-      {loading ? (
-        <ActivityIndicator size="large" color="#263238" />
-      ) : (
-        <FlatList
-          data={mentorships}
-          keyExtractor={(item) => item.id?.toString() || ""}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              onPress={() => navigation.navigate("MentorshipDetails", { mentoria: item })}
-            >
-              <View style={styles.card}>
-                <Text style={styles.cardTitle}>{item.nome}</Text>
-                <Text style={styles.cardDate}>
-                  Data: {item.data_inicio} - {item.data_fim}
-                </Text>
-                <Text style={styles.cardDescription}>{item.descricao}</Text>
-              </View>
-            </TouchableOpacity>
-          )}
-          ListEmptyComponent={<Text style={styles.emptyText}>Nenhuma aula cadastrada.</Text>}
-        />
-      )}
+        {loading ? (
+          <ActivityIndicator size="large" color="#263238" />
+        ) : (
+          <FlatList
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+            data={mentorships}
+            keyExtractor={(item) => item.id?.toString() || ""}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate("MentorshipDetails", {
+                    mentoria: item,
+                  })
+                }
+              >
+                <View style={styles.card}>
+                  <Text style={styles.cardTitle}>{item.nome}</Text>
+                  <Text style={styles.cardDate}>
+                    Data: {item.data_inicio} - {item.data_fim}
+                  </Text>
+                  <Text style={styles.cardDescription}>{item.descricao}</Text>
+                </View>
+              </TouchableOpacity>
+            )}
+            ListEmptyComponent={
+              <Text style={styles.emptyText}>Nenhuma aula cadastrada.</Text>
+            }
+          />
+        )}
 
-      <TouchableOpacity
-        style={styles.addButton}
-        onPress={() => navigation.navigate("OfferMentorship")}
-      >
-        <Text style={styles.addButtonText}>+</Text>
-      </TouchableOpacity>
-    </SafeAreaView>
+        <TouchableOpacity
+          style={styles.addButton}
+          onPress={() => navigation.navigate("OfferMentorship")}
+        >
+          <Text style={styles.addButtonText}>+</Text>
+        </TouchableOpacity>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {
@@ -83,7 +114,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     paddingHorizontal: 20,
     paddingTop: 10,
-    paddingBottom: 20
+    paddingBottom: 20,
   },
   headerContainer: {
     backgroundColor: "#fff",
@@ -120,7 +151,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     fontSize: 16,
     color: "#CECACA",
-    fontWeight: 'bold'
+    fontWeight: "bold",
   },
   addButton: {
     position: "absolute",

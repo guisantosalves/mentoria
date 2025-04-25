@@ -145,141 +145,51 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={80}
-        style={{ flex: 1 }}
-      >
-        <ScrollView
-          contentContainerStyle={styles.scrollContainer}
-          keyboardShouldPersistTaps="handled"
+    <View style={styles.container}>
+      <Text style={styles.title}>Cadastro</Text>
+
+      <Text style={styles.label}>Nome</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Digite seu nome"
+        value={nome}
+        onChangeText={setNome}
+      />
+
+      <Text style={styles.label}>Email</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Digite seu email"
+        keyboardType="email-address"
+        value={email}
+        onChangeText={setEmail}
+        autoCapitalize="none"
+      />
+
+      <Text style={styles.label}>Senha</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Digite sua senha"
+        secureTextEntry
+        value={senha}
+        onChangeText={setSenha}
+        autoCapitalize="none"
+      />
+
+      <TouchableOpacity style={styles.button} onPress={createUser}>
+        <Text style={styles.buttonText}>Cadastrar</Text>
+      </TouchableOpacity>
+
+      <Text style={styles.footerText}>
+        Já possui uma conta?{" "}
+        <Text
+          style={styles.linkText}
+          onPress={() => navigation.navigate("Login")}
         >
-          <View style={styles.innerContainer}>
-            <Text style={styles.title}>Cadastro</Text>
-
-            <Text style={styles.label}>Nome</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Digite seu nome"
-              value={nome}
-              onChangeText={setNome}
-            />
-
-            <Text style={styles.label}>Email</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Digite seu email"
-              keyboardType="email-address"
-              autoCapitalize="none"
-              value={email}
-              onChangeText={setEmail}
-            />
-
-            <Text style={styles.label}>Senha</Text>
-            <View style={styles.passwordContainer}>
-              <TextInput
-                style={styles.passwordInput}
-                placeholder="Digite sua senha"
-                secureTextEntry={!mostrarSenha}
-                value={senha}
-                onChangeText={setSenha}
-              />
-              <TouchableOpacity onPress={() => setMostrarSenha(!mostrarSenha)}>
-                <Icon
-                  name={mostrarSenha ? "eye-off" : "eye"}
-                  size={20}
-                  color="#333"
-                />
-              </TouchableOpacity>
-            </View>
-
-            <Text style={styles.label}>Confirmar Senha</Text>
-            <View style={styles.passwordContainer}>
-              <TextInput
-                style={[
-                  styles.passwordInput,
-                  !senhaCoincide && confirmarSenha ? styles.inputError : null,
-                ]}
-                placeholder="Confirme sua senha"
-                secureTextEntry={!mostrarConfirmarSenha}
-                value={confirmarSenha}
-                onChangeText={setConfirmarSenha}
-              />
-              <TouchableOpacity
-                onPress={() =>
-                  setMostrarConfirmarSenha(!mostrarConfirmarSenha)
-                }
-              >
-                <Icon
-                  name={mostrarConfirmarSenha ? "eye-off" : "eye"}
-                  size={20}
-                  color="#333"
-                />
-              </TouchableOpacity>
-            </View>
-            {!senhaCoincide && confirmarSenha !== "" && (
-              <Text style={styles.errorText}>As senhas não coincidem</Text>
-            )}
-
-            <Text style={styles.label}>CPF</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Digite seu CPF"
-              value={cpf}
-              onChangeText={setCpf}
-            />
-
-            <Text style={styles.label}>RG</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Digite seu RG"
-              value={rg}
-              onChangeText={setRg}
-            />
-            <Text style={styles.label}>Foto</Text>
-            <TouchableOpacity
-              style={styles.imageButton}
-              onPress={escolherImagem}
-              disabled={uploading}
-            >
-              {uploading ? (
-                <ActivityIndicator size="small" color="#FFF" />
-              ) : (
-                <Text style={styles.imageButtonText}>
-                  {foto ? "Trocar imagem" : "Selecionar imagem"}
-                </Text>
-              )}
-            </TouchableOpacity>
-
-            <View style={styles.imageContainer}>
-              <Image
-                source={foto ? { uri: foto } : userImage}
-                style={styles.imagePreview}
-                resizeMode="cover"
-                onError={() => {
-                  console.log('Falha ao carregar imagem');
-                  setFoto(null);
-                }}
-              />
-            </View>
-            <TouchableOpacity style={styles.button} onPress={createUser}>
-              <Text style={styles.buttonText}>Cadastrar</Text>
-            </TouchableOpacity>
-
-            <Text style={styles.footerText}>
-              Já possui uma conta?{" "}
-              <Text
-                style={styles.linkText}
-                onPress={() => navigation.navigate("Login")}
-              >
-                Faça login
-              </Text>
-            </Text>
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+          Faça login
+        </Text>
+      </Text>
+    </View>
   );
 };
 

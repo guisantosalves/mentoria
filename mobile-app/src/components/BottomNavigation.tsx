@@ -25,25 +25,30 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({
   ];
 
   return (
-    <SafeAreaView style={styles.container}>
-      {tabs.map((tab) => (
-        <TouchableOpacity
-          key={tab.name}
-          style={styles.tab}
-          onPress={() => onTabPress(tab.name)}
-        >
-          <Icon
-            name={tab.icon}
-            size={24}
-            color={activeTab === tab.name ? "#000000" : "#6C757D"}
-          />
-          <Text
-            style={[styles.label, activeTab === tab.name && styles.activeLabel]}
+    <SafeAreaView>
+      <View style={styles.container}>
+        {tabs.map((tab) => (
+          <TouchableOpacity
+            key={tab.name}
+            style={styles.tab}
+            onPress={() => onTabPress(tab.name)}
           >
-            {tab.name}
-          </Text>
-        </TouchableOpacity>
-      ))}
+            <Icon
+              name={tab.icon}
+              size={24}
+              color={activeTab === tab.name ? "#000000" : "#6C757D"}
+            />
+            <Text
+              style={[
+                styles.label,
+                activeTab === tab.name && styles.activeLabel,
+              ]}
+            >
+              {tab.name}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
     </SafeAreaView>
   );
 };
@@ -59,7 +64,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 20,
     paddingTop: 10,
-    paddingBottom: 5
+    paddingBottom: 5,
   },
   tab: {
     alignItems: "center",
